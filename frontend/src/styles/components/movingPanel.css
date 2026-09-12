@@ -1,0 +1,100 @@
+.dynamic-panel-container {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.dynamic-panel {
+    position: absolute;
+    right: -320px;
+    top: 0;
+    width: 320px;
+    height: 100%;
+    background: linear-gradient(to bottom, #2C3B49, #1F2A35);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #1a232c;
+}
+
+.dynamic-panel.active {
+    transform: translateX(-320px);
+}
+
+.dynamic-panel-toggle {
+    position: absolute;
+    left: -28px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 70px;
+    background: #ffffff;
+    border: none;
+    border-radius: 10px 0 0 10px;
+    box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1002;
+    transition: background 0.3s;
+}
+
+.dynamic-panel-toggle:hover {
+    background: #eaeaea;
+}
+
+.arrow-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+    fill: #2C3B49;
+}
+
+.dynamic-panel.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.dynamic-panel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.dynamic-panel-container.active .dynamic-panel-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dynamic-panel-content {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+    color: #f0f0f0;
+}
+
+.dynamic-panel-content h2 {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #3a4a59;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.dynamic-panel-content p {
+    color: #d0d6db;
+    line-height: 1.5;
+}

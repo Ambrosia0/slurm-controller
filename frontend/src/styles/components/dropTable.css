@@ -1,0 +1,42 @@
+.drop-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.drop-table-groups {
+    background-color: #3d5063;
+    padding: 12px 16px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    color: #FFFFFF;
+    font-weight: 400;
+    font-size: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s;
+    z-index: 1;
+}
+
+.drop-table-groups button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #5c8df6;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    z-index: 5;
+}
+
+
+
+
+.drop-table-groups:hover {
+    background-color: #4c6075;
+    cursor: pointer;
+}

@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/ambrosia0/slurm-controller:1.0.0
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    environment:
+      - PASSWORD_ENCRYPTION_KEY=AOJINF12904i3toplefvdV2423r
+      - PASSWORD_ENCRYPTION_SALT=a1b2c3d4e5f60789
+      - ADMIN_GROUP=webguiusers
+      - SLURM_DEFAULT_ACCOUNT=default
+      - SLURM_TOKEN_DURATION=3600
+      - QUOTA_SUPPORT=false
+      - ADMIN_USERNAME=testadmin
+      - ADMIN_PASSWORD=testadmin
+      - DB_URL=jdbc:postgresql://postgres:5432/clusterdb
+      - DB_USER=user
+      - DB_PASSWORD=agSjreok0iojk25oi43bm2b435d
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=clusterdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=agSjreok0iojk25oi43bm2b435d

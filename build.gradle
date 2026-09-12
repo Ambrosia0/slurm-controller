@@ -1,0 +1,64 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.16'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+version = '1.0.0'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation "com.nimbusds:nimbus-jose-jwt:10.9.1"
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.apache.sshd:sshd-core:2.15.0'
+	implementation 'org.apache.sshd:sshd:2.15.0'
+	implementation 'org.apache.sshd:sshd-spring-sftp:2.15.0'
+	implementation 'org.liquibase:liquibase-core:4.31.1'
+	implementation 'org.jetbrains.pty4j:pty4j:0.13.4'
+	compileOnly "org.projectlombok:lombok:${lombok}"
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql:42.7.5'
+	annotationProcessor "org.projectlombok:lombok:${lombok}"
+	testImplementation platform("org.testcontainers:testcontainers-bom:${testcontainers}")
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.integration:spring-integration-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	testLogging {
+        showStandardStreams = true
+    }
+}
+
+tasks.bootJar {
+	archiveFileName.set("app.jar")
+}
+
+tasks.named('bootBuildImage') {
+	imageName = "ghcr.io/ambrosia0/slurm-controller:${project.version}"
+}

@@ -1,0 +1,14 @@
+.update-button{
+    background: url("data:image/svg+xml,%3Csvg%20width%3D%22800px%22%20height%3D%22800px%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M4.06189%2013C4.02104%2012.6724%204%2012.3387%204%2012C4%207.58172%207.58172%204%2012%204C14.5006%204%2016.7332%205.14727%2018.2002%206.94416M19.9381%2011C19.979%2011.3276%2020%2011.6613%2020%2012C20%2016.4183%2016.4183%2020%2012%2020C9.61061%2020%207.46589%2018.9525%206%2017.2916M9%2017H6V17.2916M18.2002%204V6.94416M18.2002%206.94416V6.99993L15.2002%207M6%2020V17.2916%22%20stroke%3D%22%23FFFFFF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") no-repeat center;
+    position: relative;
+    background-size: 30px 30px;
+    margin-left: 2px;
+    border: none;
+    width: 10%;
+    height: 25px;
+    cursor: pointer;
+}
+
+.update-button:hover{
+    filter: brightness(0.5);
+}

@@ -1,0 +1,334 @@
+<mxfile host="65bd71144e">
+    <diagram id="ySKrr-Eyy03rZfFr4rsy" name="Page-1">
+        <mxGraphModel dx="2568" dy="1312" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="288" style="edgeStyle=none;html=1;" parent="1" source="289" target="295" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="289" value="Пользователь" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="-75" y="1140" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="290" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="295" target="296" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="291" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="290" vertex="1" connectable="0">
+                    <mxGeometry x="0.268" relative="1" as="geometry">
+                        <mxPoint x="-168" y="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="292" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="295" target="297" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="293" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="295" target="298" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="397" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="295" target="396" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="295" value="Выбор доступного кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry y="1070" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="305" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="296" target="303" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="296" value="Просмотр очереди задач" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-155" y="970" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="297" value="Загрузка директории пользователя" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-25" y="910" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="298" value="Терминал кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="145" y="970" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="300" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="144.99607306105622" y="1039.9956160278862" as="geometry"/>
+                </mxCell>
+                <mxCell id="302" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="54.99607306105622" y="1029.9956160278862" as="geometry"/>
+                </mxCell>
+                <mxCell id="303" value="Запуск задачи" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-290" y="1080" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="304" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-5.115584422738266" y="1069.8391563891785" as="geometry"/>
+                </mxCell>
+                <mxCell id="312" style="edgeStyle=none;html=1;" parent="1" source="319" target="328" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="313" style="edgeStyle=none;html=1;" parent="1" source="319" target="329" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="315" style="edgeStyle=none;html=1;" parent="1" source="319" target="342" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="316" style="edgeStyle=none;html=1;" parent="1" source="319" target="347" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="317" style="edgeStyle=none;html=1;" parent="1" source="319" target="352" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="318" style="edgeStyle=none;html=1;" parent="1" source="319" target="375" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="319" value="Администратор" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="380" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="320" value="Просмотр загрузки и статистики кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="280" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="321" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="322" target="332" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="322" value="Добавление кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="535" y="510" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="323" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="328" target="331" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="324" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="328" target="320" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="325" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="328" target="335" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="326" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="328" target="337" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="327" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="328" target="338" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="328" value="Выбор добавленного кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="360" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="329" value="Терминал сервера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="590" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="330" style="edgeStyle=none;html=1;" parent="1" source="331" target="392" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="331" value="Просмотр очереди задач" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="210" y="220" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="332" value="Выбор планировщика задач" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="660" y="590" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="335" value="Терминал кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="300" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="337" value="Просмотр пользователей кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="210" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="338" value="Загрузка директорий пользователей" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="120" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="339" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="342" target="354" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="340" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="342" target="355" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="341" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="342" target="394" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="342" value="Управление пользователями платформы" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-50" y="270" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="343" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="347" target="357" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="344" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="347" target="358" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="345" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="347" target="359" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="346" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="347" target="360" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="347" value="Управление доступом к кластерам у пользователей" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-150" y="430" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="348" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="352" target="367" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="349" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="352" target="365" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="350" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="352" target="366" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="351" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="352" target="368" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="352" value="Управление группами пользователей" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-100" y="540" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="353" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="19.996073061056194" y="219.99561602788606" as="geometry"/>
+                </mxCell>
+                <mxCell id="354" value="Добавление пользователя" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="70" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="355" value="Удаление пользователя" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-90" y="120" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="356" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="99.9960730610562" y="189.99561602788606" as="geometry">
+                        <mxPoint x="7" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="357" value="Предоставление доступа пользователю" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-330" y="320" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="358" value="Предоставление доступа группе пользователей" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-360" y="390" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="359" value="Лишение доступа пользователя" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-350" y="460" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="360" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Лишение доступа группы пользователей&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-340" y="530" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="361" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-100.0039269389438" y="339.99561602788606" as="geometry">
+                        <mxPoint x="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="362" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-160.0039269389438" y="429.99561602788606" as="geometry"/>
+                </mxCell>
+                <mxCell id="363" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-180.0039269389438" y="459.99561602788606" as="geometry"/>
+                </mxCell>
+                <mxCell id="364" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-15.003926938943806" y="379.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="365" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Добавление группы&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-310" y="590" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="366" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Удаление группы&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-245" y="650" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="367" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Добавление пользователя в группу&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-50" y="690" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="368" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Удаление пользователя из группы&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-200" y="730" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="369" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="9.996073061056194" y="459.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="370" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="34.996073061056194" y="489.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="371" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="79.9960730610562" y="519.9956160278861" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="372" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="164.9960730610562" y="529.9956160278861" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="373" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="375" target="322" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="374" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="375" target="376" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="375" value="Управление кластерами" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="520" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="376" value="Удаление кластера" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="600" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="377" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="378" target="322" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="378" value="Нет доступа к кластеру по предоставленным данным" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="400" width="188.34" height="66.47" as="geometry"/>
+                </mxCell>
+                <mxCell id="379" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="749.9960730610562" y="349.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="380" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="479.9960730610562" y="189.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="381" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="619.9960730610562" y="459.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="382" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="809.9960730610562" y="449.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="383" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="439.9960730610562" y="229.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="384" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="629.9960730610562" y="399.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="385" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="534.9960730610562" y="159.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="389" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="390" target="347" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="390" value="Нет прав у профиля администратора на кластере" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-250" y="210" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="391" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-130.0039269389438" y="399.99561602788606" as="geometry"/>
+                </mxCell>
+                <mxCell id="392" value="Запуск задачи" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="140" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="393" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="249.9960730610562" y="209.99561602788606" as="geometry">
+                        <mxPoint x="7" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="394" value="Импорт пользователей" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-260" y="80" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="395" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-65.0039269389438" y="209.99561602788606" as="geometry"/>
+                </mxCell>
+                <mxCell id="396" value="Просмотр информации о профиле" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="255" y="1080" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="398" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="219.99607306105622" y="1039.9956160278862" as="geometry">
+                        <mxPoint x="-10" y="48" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="399" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="599.9960730610562" y="169.99561602788606" as="geometry">
+                        <mxPoint x="-135" y="130" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

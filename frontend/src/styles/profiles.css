@@ -1,0 +1,55 @@
+#profiles-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+#profiles-container-display-mode{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5px;
+    width: 100%;
+    height: 30px;
+}
+
+#profiles-container-display-mode label{
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: #FFFFFF;
+    background-color: #2C3B49;
+    justify-content: center;
+    font-size: 18px;
+}
+
+#profiles-container-display-mode label.active{
+    background-color: #ffffff52;
+}
+#profiles-container-display-mode label:hover{
+    background-color: #ffffff57;
+    border-radius: 10px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#profiles-container-display-mode input{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+
+#profiles-option-render-container{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}

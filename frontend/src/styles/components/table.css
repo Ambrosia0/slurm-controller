@@ -1,0 +1,88 @@
+.table{
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    background-color: #2c3b493f;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.table thead{
+    background-color: #1f2a36;
+}
+
+.table thead tr{
+    height: 45px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 15px;
+}
+.table thead th{
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #3A4D63;
+    cursor: pointer;
+}
+
+
+.table tbody tr{
+    height: 45px;
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #33475b;
+}
+
+
+.table tbody tr:hover {
+    background-color: #3f5e78;
+}
+
+.table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #3A4D63;
+    color: #f0f0f0;
+}
+
+.table tbody td button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #5c8df6;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.table tbody td button:hover {
+    background-color: #406ed6;
+}
+
+.tres-subtable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.tres-subtable tbody tr {
+    background-color: transparent;
+    height: auto;
+}
+
+.tres-subtable tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
+.tres-subtable tbody td {
+    padding: 2px 8px;
+    border: none;
+    vertical-align: top;
+}
+
+.tres-subtable tbody td:first-child {
+    font-weight: bold;
+    color: #8ec8f0;
+    white-space: nowrap;
+    padding-right: 12px;
+}

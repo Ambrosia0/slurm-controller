@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: "001-init"
+      author: me
+      changes:
+        - sqlFile:
+            path: classpath:db/migrations/sql/initial_schema.sql

@@ -1,0 +1,140 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.form input[type="text"],
+.form input[type="password"],
+.form input[type="number"],
+.form select {
+    width: 100%;
+    height: 36px;
+    font-size: 16px;
+    border: none;
+    border-bottom: 2px solid #ffffff7e;
+    background-color: transparent;
+    color: #ffffff;
+    padding: 4px;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.form input::placeholder {
+    color: #ffffff66;
+}
+
+.form input[type="text"]:focus,
+.form input[type="password"]:focus,
+.form input[type="number"]:focus,
+.form select:focus {
+    outline: none;
+    border-bottom: 2px solid #ffffffcc;
+    color: #ffffff;
+}
+
+.form label {
+    color: #ffffffb0;
+    font-size: 14px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ffffffcc;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.form select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 24px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23ffffff7e' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.form option {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+.form div {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-top: 2px solid #ffffff7e;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.form div button {
+    width: 100%;
+    height: 40px;
+    background-color: transparent;
+    color: #ffffff9f;
+    border: 2px solid #ffffff7e;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.form div button:hover {
+    background-color: #ffffff1a;
+    border-color: #ffffffcc;
+    color: #ffffff;
+}
+
+.form div button:active {
+    background-color: #ffffff33;
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.form ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #1e1e1e;
+    border: 1px solid #ffffff3a;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.form ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form ul li:hover {
+    background-color: #ffffff22;
+}
+
+.form ul li button {
+    background: none;
+    border: none;
+    color: #ff6961;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 6px;
+    transition: color 0.2s;
+}
+
+.form ul li button:hover {
+    color: #ff3b30;
+}

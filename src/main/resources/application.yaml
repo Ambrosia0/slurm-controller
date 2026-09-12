@@ -1,0 +1,65 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: cluster-controller
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 40
+  data:
+    web:
+      pageable:
+        max-page-size: 100
+        default-page-size: 20
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    clear-checksums: true
+security:
+  jwt:
+    access-token-expiration-time: ${ACCESS_TOKEN_DURATION}
+    refresh-token-expiration-time: ${REFRESH_TOKEN_DURATION}
+app:
+  secret-key: ${cluster-controller-secret-key}
+  default:
+    password-encryption-key: ${PASSWORD_ENCRYPTION_KEY}
+    password-encryption-salt: ${PASSWORD_ENCRYPTION_SALT}
+    user-group: ${ADMIN_GROUP}
+    account: ${SLURM_DEFAULT_ACCOUNT:default}
+    slurm-token-duration: ${SLURM_TOKEN_DURATION:3600}
+    disk-quota-path: ${DISK_QUOTA_PATH:/data}
+    home-directory-path: ${HOME_DIRACTORY_PATH:/home}
+    admin-username: ${ADMIN_USERNAME}
+    admin-password: ${ADMIN_PASSWORD}
+    quota-supported: ${QUOTA_SUPPORT:true}
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - test
+  datasource:
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 5
+app:
+  default:
+    quota-supported: false
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - prod
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+    key-alias: mycert

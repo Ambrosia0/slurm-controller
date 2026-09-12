@@ -1,0 +1,72 @@
+{"properties": [
+  {
+    "name": "app.secret-key",
+    "type": "java.lang.String",
+    "description": "Secret key for cluster password encryption"
+  },
+  {
+    "name": "app.user-directory",
+    "type": "java.lang.String",
+    "description": "Default user directory path"
+  },
+  {
+    "name": "app.task-output-directory-name",
+    "type": "java.lang.String",
+    "description": "Directory path in user's directory for output files"
+  },
+  {
+    "name": "app.default.password-encryption-salt",
+    "type": "java.lang.String",
+    "description": "A description for 'app.default.password-encryption-salt'"
+  },
+  {
+    "name": "app.default.password-encryption-key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.default.password-encryption-key'"
+  },
+  {
+    "name": "app.default.user-group",
+    "type": "java.lang.String",
+    "description": "System group used for administrative operations over user home directories"
+  },
+  {
+    "name": "app.default.account",
+    "type": "java.lang.String",
+    "description": "Slurm account name for users"
+  },
+  {
+    "name": "app.default.disk-quota-path",
+    "type": "java.lang.String",
+    "description": "Path to partition with quota"
+  },
+  {
+    "name": "app.default.home-directory-path",
+    "type": "java.lang.String",
+    "description": "Home directory path of users"
+  },
+  {
+    "name": "app.default.admin-password",
+    "type": "java.lang.String",
+    "description": "Default admin password"
+  },
+  {
+    "name": "app.default.admin-username",
+    "type": "java.lang.String",
+    "description": "Default admin username"
+  },
+  {
+    "name": "app.default.slurm-token-duration",
+    "type": "java.lang.Long",
+    "description": "Duration of slurm token"
+  },
+  {
+    "name": "app.default.gpu-supported",
+    "type": "java.lang.Boolean",
+    "description": "Flag, indicating whether GPU tres is supported"
+  },
+  {
+    "name": "app.default.quota-supported",
+    "type": "java.lang.Boolean",
+    "description": "Flag, indicating whether Quota is supported"
+  }
+]}
