@@ -72,7 +72,7 @@ Navigate to the project directory and run the Gradle build script:
 > The application will produce a runnable `.jar` file in `build/libs/`.
 
 ```bash
-./gradlew bootBuildImage
+docker build . -t ghcr.io/ambrosia0/slurm-controller:1.0.0
 ```
 
 > Produces container image
@@ -97,8 +97,7 @@ The built frontend files are served statically by the Spring Boot application fr
 First, configure the environment variables in `docker-compose-dev.yaml`, then build and run:
 
 ```bash
-./gradlew bootBuildImage
-docker compose -f docker-compose-dev.yaml up --build
+docker compose up --build
 ```
 
 ## Configuration
