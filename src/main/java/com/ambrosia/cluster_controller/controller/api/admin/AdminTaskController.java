@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/cluster/{clusterId}")
-@PreAuthorize("hasRole('ADMIN')")
 @Validated
 public class AdminTaskController {
     private final AdminTaskService taskService;
@@ -57,17 +55,17 @@ public class AdminTaskController {
     @PostMapping("/bound/{clusterName}/task")
     public void create(
             @PathVariable Long clusterId,
-            @PathVariable String bindedCluster,
+            @PathVariable String clusterName,
             @RequestBody @Valid TaskRequest taskDTO) {
-        taskService.createTask(clusterId, bindedCluster, taskDTO);
+        taskService.createTask(clusterId, clusterName, taskDTO);
     }
 
     
     @DeleteMapping("/bound/{clusterName}/task/{taskId}")
     public void cancelTask(
             @PathVariable Long taskId,
-            @PathVariable String bindedCluster,
+            @PathVariable String clusterName,
             @PathVariable Long clusterId) {
-        taskService.cancelTask(clusterId, bindedCluster, taskId);
+        taskService.cancelTask(clusterId, clusterName, taskId);
     }
 }

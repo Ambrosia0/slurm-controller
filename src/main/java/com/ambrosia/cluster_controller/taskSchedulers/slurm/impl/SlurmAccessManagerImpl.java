@@ -287,7 +287,7 @@ public class SlurmAccessManagerImpl implements SlurmAccessManager, SlurmProfileC
 
                     try {
                         return SlurmTres.builder()
-                            .name(tresArr[0])
+                            .type(tresArr[0])
                             .count(Long.parseLong(tresArr[1]))
                             .build();
                     } catch (NumberFormatException e) {

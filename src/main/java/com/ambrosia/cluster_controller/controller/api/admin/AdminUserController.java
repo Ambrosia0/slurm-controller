@@ -13,10 +13,7 @@ import com.ambrosia.cluster_controller.service.databaseHandlers.UserManageServic
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
-@PreAuthorize("hasRole('ADMIN')")
 @Validated
 public class AdminUserController {
     private final UserManageService userService;

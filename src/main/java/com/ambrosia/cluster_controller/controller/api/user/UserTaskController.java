@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cluster/{clusterId}")
-@PreAuthorize("hasRole('USER')")
 @Validated
 public class UserTaskController {
     private final UserTaskService taskService;

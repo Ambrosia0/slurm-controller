@@ -18,7 +18,6 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/group")
-@PreAuthorize("hasRole('ADMIN')")
 @Validated
 public class AdminGroupController {
     private final GroupManageService groupService;

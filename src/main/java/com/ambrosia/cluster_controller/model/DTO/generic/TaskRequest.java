@@ -8,7 +8,7 @@ import lombok.Builder;
 
 @Builder 
 public record TaskRequest(
-    @Pattern(regexp = "^#!/bin/bash\\\\n.+", message = "Script must start with #!/bin/bash")
+    @Pattern(regexp = "^(?s)^#!/bin/(?:bash|sh)\\R+.+", message = "Script must start with #!/bin/bash")
     String script,
 
     List<@Valid JobRequest> jobs,

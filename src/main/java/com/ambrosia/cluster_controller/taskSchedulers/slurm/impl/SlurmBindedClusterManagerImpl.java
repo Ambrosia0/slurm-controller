@@ -109,6 +109,7 @@ public class SlurmBindedClusterManagerImpl implements SlurmBindedClusterManager 
                                         .build()
                                     )
                                     .name(t.name())
+                                    .nodes(t.nodes())
                                     .associations(t.associations())
                                     .slurmVersion(t.slurmVersion())
                                     .tres(t.tres())

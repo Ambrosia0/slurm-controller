@@ -8,6 +8,5 @@ public record ClusterProfileFilter(
     Long groupId,
     Long clusterId,
     String bindedCluster,
-    @Size(min = 3)
-    String username
+    @Size(min = 3) String username
 ) {}

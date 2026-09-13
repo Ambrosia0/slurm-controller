@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cluster")
-@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class UserClusterController {
     private final ClusterUserService clusterUserService;
 

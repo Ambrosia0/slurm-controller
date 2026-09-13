@@ -39,6 +39,10 @@ public class SecurityConfig {
                     .disable())
             .authorizeHttpRequests(
                 http -> http
+                    .requestMatchers("/api/user/info").authenticated()
+                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/api/user", "/api/user/**").hasRole("ADMIN")
+                    .requestMatchers("/api/group", "/api/group/**").hasRole("ADMIN")
                     .requestMatchers("/api/login").permitAll()
                     .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/manifest.json").permitAll()
                     .anyRequest().authenticated()

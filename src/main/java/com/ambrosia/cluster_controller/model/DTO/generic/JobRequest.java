@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.ambrosia.cluster_controller.util.TresUtils;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
@@ -13,10 +12,9 @@ import lombok.Builder;
 public record JobRequest(
     List<String> args,
 
-    @Pattern (regexp = "^#!/bin/bash\\\\n.+", message = "Script must start with #!/bin/bash")
+    @Pattern (regexp = "^#!/bin/bash\\R.+", message = "Script must start with #!/bin/bash")
     String script,
 
-    @NotNull 
     @Pattern(regexp = "^\\/([a-zA-Z0-9._-]+\\/)*[a-zA-Z0-9._-]+\\/?$", message = "Path must match with unix-system paths")
     String directory,
 

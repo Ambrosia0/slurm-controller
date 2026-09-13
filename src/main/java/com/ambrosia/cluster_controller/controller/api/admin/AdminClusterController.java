@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/cluster")
-@PreAuthorize("hasRole('ADMIN')")
 @Validated
 public class AdminClusterController {
     private final ClusterManageService clusterService;
@@ -69,11 +68,11 @@ public class AdminClusterController {
         return clusterService.getBindedClusters(clusterId);
     }
 
-    @DeleteMapping("/{clusterId}/bound/{bindedCluster}/groups/{groupId}")
+    @DeleteMapping("/{clusterId}/bound/{clusterName}/groups/{groupId}")
     public void deleteGroupProfiles(
             @PathVariable Long clusterId,
             @PathVariable Long groupId,
-            @PathVariable String bindedCluster){
-        clusterProfileService.revokeAccessFromGroup(clusterId, groupId, bindedCluster);
+            @PathVariable String clusterName){
+        clusterProfileService.revokeAccessFromGroup(clusterId, groupId, clusterName);
     }
 }
