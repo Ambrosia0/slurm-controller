@@ -84,7 +84,7 @@ Navigate to the frontend directory:
 ```bash
 cd frontend
 npm install
-npm start        # Start development server (localhost:3000)
+npm run dev        # Start development server (localhost:5173)
 npm run build    # Build for production
 ```
 
