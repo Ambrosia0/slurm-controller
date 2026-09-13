@@ -31,8 +31,6 @@ export const Terminal = ({ socketUrl }: TerminalProps) => {
     const socket = new WebSocket(socketUrl);
     socketRef.current = socket;
 
-
-
     window.onresize = function () {
       fitAddon.fit();
     };
@@ -91,5 +89,6 @@ export const Terminal = ({ socketUrl }: TerminalProps) => {
 
   return <div ref={terminalRef} style={{ width: '100%', height: '100%' }} />;
 };
+
 
 export default Terminal

@@ -17,8 +17,10 @@ import LinkUserForm from "../forms/LinkUserForm";
 import CreateRandomUsers from "../forms/CreateRandomUsers";
 import type { GroupAdminResponse } from "../../api/admin/groups";
 import { Group, PageMetadata } from "../../utils/Interfaces";
+import { useTranslation } from 'react-i18next'
 
 const Users = () => {
+    const { t } = useTranslation();
     type DisplayMode = "groupsTable" | "usersTable"
 
     const [pageUsers, setPageUsers] = useState<UserAdminResponse[]>([]);
@@ -87,11 +89,11 @@ const Users = () => {
             const prepared = data.content.map((group: GroupAdminResponse) => ({
                 group,
                 users: []
-            }));
+           }));
             setTableGroups(prepared);
         } catch (error) {
             console.log("Error!", error);
-            alert('Ошибка!');
+            alert(t('users.error'));
         } finally{
             setIsBusy(false);
         }
@@ -110,10 +112,10 @@ const Users = () => {
                 } : null
             );
             setPageUsers(data.content);
-            setPageMetadata(data.pageable);
+            setPageMetadata({...data});
         } catch (error) {
             console.log("Error!", error);
-            alert('Ошибка!');
+            alert(t('users.error'));
         } finally{
             setIsBusy(false);
         }
@@ -194,7 +196,7 @@ const Users = () => {
                     } : null
                 );
                 setPageUsers(data.content);
-                setPageMetadata(data.pageable);
+                setPageMetadata({...data});
             }
         } catch (error) {
             alert('Error!');
@@ -257,43 +259,50 @@ const Users = () => {
     };
 
     const renderPageNumbers = () => {
-        const pages = [];
         const { number: currentPage, totalPages } = pageMetadata;
-    
-        const createPageButton = (page: number) => renderPageButton(page);
-    
-        const addEllipsis = (key: string) =>
-            pages.push(<span key={key} style={{ padding: '0 5px' }}>...</span>);
-    
-        pages.push(createPageButton(0));
-    
-        if (currentPage > 2) {
-            pages.push(createPageButton(1));
+
+        if (totalPages <= 1) {
+            return renderPageButton(0);
         }
-    
-        if (currentPage > 3) {
-            addEllipsis('left-dots');
-        }
-    
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-            if (i > 1 && i < totalPages - 1) {
-                pages.push(createPageButton(i));
+
+        const pages = new Set<number>();
+        pages.add(0);
+        pages.add(totalPages - 1);
+
+        for (
+            let page = currentPage - 1;
+            page <= currentPage + 1;
+            page++
+        ) {
+            if (page >= 0 && page < totalPages) {
+                pages.add(page);
             }
         }
-    
-        if (currentPage < totalPages - 4) {
-            addEllipsis('right-dots');
+        if (currentPage > 2) {
+            pages.add(1);
         }
-    
-        if (currentPage < totalPages - 2) {
-            pages.push(createPageButton(totalPages - 2));
+
+        if (currentPage < totalPages - 3) {
+            pages.add(totalPages - 2);
         }
-    
-        if (totalPages > 1) {
-            pages.push(createPageButton(totalPages - 1));
-        }
-    
-        return pages;
+
+        const sortedPages = [...pages].sort((a, b) => a - b);
+
+        const result: React.ReactNode[] = [];
+
+        sortedPages.forEach((page, index) => {
+            if (index > 0 && page - sortedPages[index - 1] > 1) {
+                result.push(
+                    <span key={`dots-${page}`} style={{ padding: '0 5px' }}>
+                        ...
+                    </span>
+                );
+            }
+
+            result.push(renderPageButton(page));
+        });
+
+        return result;
     };
 
     const renderPageButton = (pageIndex: number) => (
@@ -335,6 +344,24 @@ const Users = () => {
         }))
     }
 
+    const HiddenPassword = ({ password }: {password: string}) =>{
+        const [visible, setVisible] = useState<boolean>(false);
+        return(
+            <span>
+                {visible? password: "********"}
+                <button
+                    style={{
+                        background: "none"
+                    }}
+                    onClick={() => setVisible(val => !val)}
+                    aria-label={visible ? "Hide password" : "Show password"}
+                >
+                    {visible? "👁️": "👁️‍🗨️"}
+                </button>
+            </span>
+        )
+    }
+
     useEffect(() => {
         rerenderCurrentPage();
     }, [sortField, sortDirection]);
@@ -343,19 +370,19 @@ const Users = () => {
         <div id="users-containter">
             <MovingPanel isOpen={dynamicPanel} onClose={() => setDynamicPanel(dynamicPanel? false: true)}>
                 <div className="dynamic-panel-tab">
-                    <button onClick={() => toggleTab('users')}>Пользователи</button>
+                    <button onClick={() => toggleTab('users')}>{t("groups.users")}</button>
                     {openTabs.users && <div className="subsection">
-                        <button onClick={() => {setActiveForm('createUser'); setIsFormOpen(true);}}>Создание пользователя</button>
-                        <button onClick={() => {setActiveForm('createRandomUsers'); setIsFormOpen(true)}}>Создание произвольных пользователей</button>
+                        <button onClick={() => {setActiveForm('createUser'); setIsFormOpen(true);}}>{t("groups.createUser")}</button>
+                        <button onClick={() => {setActiveForm('createRandomUsers'); setIsFormOpen(true)}}>{t("groups.createRandomUser")}</button>
                     </div>}
-                    <button onClick={() => toggleTab('groups')}>Группы</button>
+                    <button onClick={() => toggleTab('groups')}>{t("groups.groups")}</button>
                     {openTabs.groups && <div className="subsection">
-                        <button onClick={() => {setActiveForm('createGroup'); setIsFormOpen(true)}}>Создание пустой группы</button>
-                        <button onClick={() => {setActiveForm('deleteGroup'); setIsFormOpen(true)}}>Удаление группы</button>
+                        <button onClick={() => {setActiveForm('createGroup'); setIsFormOpen(true)}}>{t("groups.createGroup")}</button>
+                        <button onClick={() => {setActiveForm('deleteGroup'); setIsFormOpen(true)}}>{t("groups.deleteGroup")}</button>
                     </div>}
-                    <button onClick={() => toggleTab('links')}>Привязка</button>
+                    <button onClick={() => toggleTab('links')}>{t("groups.link")}</button>
                     {openTabs.links && <div className="subsection">
-                        <button onClick={() => {setActiveForm('linkUser'); setIsFormOpen(true)}}>Привязка пользователя</button>
+                        <button onClick={() => {setActiveForm('linkUser'); setIsFormOpen(true)}}>{t("groups.linkUser")}</button>
                     </div>}
                 </div>
                     
@@ -371,19 +398,19 @@ const Users = () => {
             <div id="display-mode-container">
                 <label htmlFor="groupsTable">
                     <input type="radio" name="displayMode" onChange={() => renderDisplayOption("groupsTable")} />
-                    Группы
+                    {t("groups.groups")}
                 </label>
                 <label htmlFor="usersTable">
                     <input type="radio" name="displayMode" onChange={() => renderDisplayOption("usersTable")} />
-                    Пользователи
+                    {t("groups.users")}
                 </label>
             </div>
             <div id="button-container">
                 <label>
                     <input type="file" accept=".json" onChange={importUsers} />
-                    <span>Импортировать из JSON</span>
+                    <span>{t("groups.import")}</span>
                 </label>
-                <button onClick={() => exportUsers()}>Экспортировать в JSON</button>
+                <button onClick={() => exportUsers()}>{t("groups.export")}</button>
             </div>
             <div id="user-container-render">
                 {displayOption === "groupsTable" && tableGroup.map(item =>(
@@ -392,8 +419,8 @@ const Users = () => {
                         <div className="drop-table-groups" onClick={() => toggleGroup(item.group.id)}>
                             {item.group.name} {openGroups.includes(item.group.id)? '▲' : '▼'}
                             <div>
-                                <button onClick={() => exportGroup(item.group)}>Экспорт в JSON</button>
-                                <button onClick={() => {setActiveForm('groupRename'); setIsFormOpen(true)}}>Переименовать</button>
+                                <button onClick={() => exportGroup(item.group)}>{t("groups.export")}</button>
+                                <button onClick={() => {setActiveForm('groupRename'); setIsFormOpen(true)}}>{t("groups.rename")}</button>
                             </div>
                         </div>
                         {openGroups.includes(item.group.id) && (
@@ -402,24 +429,24 @@ const Users = () => {
                                     <tr>
                                         <th>№</th>
                                         <th>Id</th>
-                                        <th>Имя пользователя</th>
-                                        <th>Пароль</th>
-                                        <th>Время создания</th>
-                                        <th>Действие</th>
+                                        <th>{t("users.username")}</th>
+                                        <th>{t("users.password")}</th>
+                                        <th>{t("users.createdAt")}</th>
+                                        <th>{t("users.action")}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {item.users.length === 0 ? 
-                                        (<tr><td>Загрузка профилей...</td></tr>): 
+                                        (<tr><td>{t("users.empty")}</td></tr>): 
                                         item.users.map((user,index) =>(
                                             <tr key={user.id}>
                                                 <td>{index+1}</td>
                                                 <td>{user.id}</td>
                                                 <td>{user.username}</td>
-                                                <td>{user.password}</td>
+                                                <td><HiddenPassword password={user.password}/></td>
                                                 <td>{new Date(user.createdAt).toLocaleString()}</td>
                                                 <td>
-                                                    <button onClick={() => deleteUser(user)}>Удалить</button>
+                                                    <button onClick={() => deleteUser(user)}>{t("users.delete")}</button>
                                                 </td>
                                             </tr>
                                         ))
@@ -432,36 +459,36 @@ const Users = () => {
                 {displayOption === "usersTable" &&
                     <div className="table-option-container">
                         <div className="table-container">
-                            {pageUsers.length === 0 ? (<h2>Загрузка профилей...</h2>) : <>
+                            {pageUsers.length === 0 ? (<h2>{t("users.loading")}</h2>) : <>
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th>№</th>
+                                               <th>№</th>
                                             <th onClick={() => handleSort('id')}>Id
                                                 {sortField === 'id' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('username')}>Имя пользователя
+                                            <th onClick={() => handleSort('username')}>{t('users.username')}
                                                 {sortField === 'username' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('password')}>Пароль
+                                            <th onClick={() => handleSort('password')}>{t('users.password')}
                                                 {sortField === 'password' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('group.name')}>Группа
+                                            <th onClick={() => handleSort('group.name')}>{t('users.group')}
                                                 {sortField === 'group.name' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('createdAt')}>Время создания
+                                            <th onClick={() => handleSort('createdAt')}>{t('users.createdAt')}
                                                 {sortField === 'createdAt' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th>Действие</th>
+                                            <th>{t('users.action')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pageUsers.length === 0 ? (<tr><td>Загрузка профилей...</td></tr>) :
+                                          {pageUsers.length === 0 ? (<tr><td>{t('users.loading')}</td></tr>) :
                                             pageUsers.map((user, index) => (
                                                 <tr key={user.id}>
                                                     <td>{index+1}</td>
                                                     <td>{user.id}</td>
                                                     <td>{user.username}</td>
-                                                    <td>{user.password}</td>
-                                                    <td>{user.group !== null ? user.group.name : "Нет"}</td>
+                                                    <td><HiddenPassword password={user.password}/></td>
+                                                    <td>{user.group !== null ? user.group.name : t('common.no')}</td>
                                                     <td>{new Date(user.createdAt).toLocaleString()}</td>
                                                     <td>
-                                                        <button onClick={() => deleteUser(user)}>Удалить</button>
+                                                        <button onClick={() => deleteUser(user)}>{t('users.delete')}</button>
                                                     </td>
                                                 </tr>
                                             ))
@@ -471,17 +498,17 @@ const Users = () => {
                             </>}
                         </div>
                         <div className="pagination">
-                            <button className="prev-button" onClick={() => handlePageChange(pageMetadata.number - 1)} disabled={pageMetadata.number === 0}>
-                                Назад
+                             <button className="prev-button" onClick={() => handlePageChange(pageMetadata.number - 1)} disabled={pageMetadata.number === 0}>
+                                {t('common.back')}
                             </button>
 
                             {renderPageNumbers()}
 
                             <button className="next-button" onClick={() => handlePageChange(pageMetadata.number + 1)} disabled={pageMetadata.number === pageMetadata.totalPages}>
-                                Вперед
+                                {t('common.next')}
                             </button>
 
-                            <select title="Количество отображаемых профилей" value={pageMetadata.size} onChange={handlePageSizeChange}>
+                            <select title={t("profiles.selectTitle")} value={pageMetadata.size} onChange={handlePageSizeChange}>
                                 <option value={20}>20</option>
                                 <option value={30}>30</option>
                                 <option value={50}>50</option>

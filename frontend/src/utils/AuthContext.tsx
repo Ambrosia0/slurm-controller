@@ -23,7 +23,7 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     const logout = useCallback(async () => {
         try {
-            const resp = await apiClient.post('/api/logout');
+            await apiClient.post('/api/logout');
         } catch {};
         renderLogin();
     }, [renderLogin]);
@@ -32,12 +32,12 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
         try {
             const resp = await apiClient.post<string>('/api/login', {username, password});
             if(resp.status === 200){
-                setRole(resp.data);
+                await getRole();
                 setIsAuthenticated(true);
             }
         } catch (error) {
             renderLogin();
-            
+            throw error;
         }
     },[renderLogin]);
 

@@ -1,3 +1,4 @@
+import "./styles/App.css";
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './utils/AuthContext';

@@ -3,6 +3,7 @@ import "../../styles/components/form.css"
 import { GroupAdminResponse, updateGroup } from "../../api/admin/groups";
 import ModalForm from "../../pages/ModalForm";
 import { useRef } from "react";
+import { useTranslation } from 'react-i18next'
 
 interface GroupRenameProps{
     isOpen: boolean,
@@ -12,6 +13,7 @@ interface GroupRenameProps{
 
 const GroupRenameForm: React.FC<GroupRenameProps> = ({isOpen, onClose, group}) =>{
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
 
     const renameGroup = async() =>{
         if (!formRef.current) {
@@ -44,17 +46,17 @@ const GroupRenameForm: React.FC<GroupRenameProps> = ({isOpen, onClose, group}) =
     return (
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form className="form" ref={formRef} onSubmit={(e) => e.preventDefault()}>
-                <input name="groupName" type="text"  pattern='^[a-zA-Z0-9._\-]{3,32}$' placeholder="Введите название..." 
+                <input name="groupName" type="text"  pattern='^[a-zA-Z0-9._\-]{3,32}$' placeholder={t('forms.groupNamePlaceholder')} 
                 onInvalid={(e) =>
                     (e.currentTarget as HTMLInputElement).setCustomValidity(
-                        "Название группы должно содержать минимум 3-32 символа, допустимые спецсимволы: . _ -."
+                        t('forms.groupNameValidation')
                     )}
                 onInput={(e) => {
                     e.currentTarget.setCustomValidity("");
                 }} required></input>
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={() => renameGroup()}>Переименовать</button>
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={() => renameGroup()}>{t('forms.rename')}</button>
                 </div>
             </form>
         </ModalForm>

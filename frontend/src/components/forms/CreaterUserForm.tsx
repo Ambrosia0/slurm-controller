@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import {createUser as apiCreateUser} from '../../api/admin/users'
 import { getGroups as apiGetGroups, GroupAdminResponse } from '../../api/admin/groups';
 import { ActionFormProps } from '../../utils/Interfaces';
+import { useTranslation } from 'react-i18next'
 
 
 
@@ -14,6 +15,7 @@ const CreateUserForm: React.FC<ActionFormProps> = ({
     onClose
 }) =>{
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
     const [groups, setGroups] = useState<GroupAdminResponse[]>([]);
 
     const createUser = async() =>{
@@ -61,36 +63,36 @@ const CreateUserForm: React.FC<ActionFormProps> = ({
     return(
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form ref={formRef} className='form' onSubmit={(e) => {e.preventDefault()}}>
-                <input type='text' name='username' pattern='^[a-zA-Z0-9._\-]{8,16}$' placeholder='Имя пользователя...'
+                <input type='text' name='username' pattern='^[a-zA-Z0-9._\-]{8,16}$' placeholder={t('forms.usernamePlaceholder')}
                     onInvalid={(e) =>
                         (e.currentTarget as HTMLInputElement).setCustomValidity(
-                            "Имя пользователя должно содержать минимум 3-32 символа, допустимые спецсимволы: . _ -."
+                            t('forms.usernameValidation')
                         )}
                     onInput={(e) => {
                         e.currentTarget.setCustomValidity("");
                     }} required></input>
                 <input type='password' name='password' pattern="^[A-Za-z0-9!@#$&*]{12,255}$"
-                     placeholder='Пароль...'
+                     placeholder={t('forms.passwordPlaceholder')}
                      onInvalid={(e) =>
                         (e.currentTarget as HTMLInputElement).setCustomValidity(
-                          "[A-Za-z0-9!@#$&*]{12,255}"
+                          t('forms.passwordPattern')
                         )}
                     onInput={(e) => {
                         e.currentTarget.setCustomValidity("");
                         }}                        
                     required></input>
                 <label>
-                    Группа:
+                    {t('forms.groupLabel')}
                     <select name="group" onFocus={handleFocus}>
-                        <option value="">Нет</option>
+                        <option value="">{t('forms.no')}</option>
                         {groups.map((group, index) => (
                             <option key={index} value={group.id}>{group.name}</option>
                         ))}
                     </select>
                 </label>
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={() => createUser()}>Создать</button>
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={() => createUser()}>{t('common.create')}</button>
                 </div>
             </form>
         </ModalForm>

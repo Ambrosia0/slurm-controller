@@ -3,11 +3,13 @@ import { useRef, useState } from "react"
 import ModalForm from "../../pages/ModalForm"
 import {deleteGroup as apiDeleteGroup, getGroups as apiGetGroups, GroupAdminResponse} from "../../api/admin/groups" 
 import { ActionFormProps } from '../../utils/Interfaces'
+import { useTranslation } from 'react-i18next'
 
 
 
 const DeleteGroupForm: React.FC<ActionFormProps> = ({isOpen, onClose, onSuccessCall}) =>{
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [groups, setGroups] = useState<GroupAdminResponse[]>([]);
 
@@ -24,7 +26,7 @@ const DeleteGroupForm: React.FC<ActionFormProps> = ({isOpen, onClose, onSuccessC
         const groupId = parseInt(formData.get('group') as string, 10);
     
         if (isNaN(groupId)) {
-            alert('Некорректный ID группы');
+            alert(t('forms.invalidGroupId'));
             return;
         }
     
@@ -59,7 +61,7 @@ const DeleteGroupForm: React.FC<ActionFormProps> = ({isOpen, onClose, onSuccessC
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form ref={formRef} className="form" onSubmit={(e) => e.preventDefault()}>
                 <label>
-                    Группа:
+                    {t('forms.groupLabel')}
                     <select name="group" onFocus={handleFocus} required>
                         {groups.length !== 0 && groups.map((group, index) => (
                             <option key={index} value={group.id}>{group.name}</option>
@@ -68,11 +70,11 @@ const DeleteGroupForm: React.FC<ActionFormProps> = ({isOpen, onClose, onSuccessC
                 </label>
                 <label>
                     <input type="checkbox" checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)}></input>
-                    Удалить связанных пользователей?
+                    {t('forms.deleteUsers')}
                 </label>
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={() => deleteGroup()}>Удалить</button>
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={() => deleteGroup()}>{t('forms.delete')}</button>
                 </div>
             </form>
         </ModalForm>

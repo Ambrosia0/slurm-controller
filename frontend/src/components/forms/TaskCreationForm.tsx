@@ -1,15 +1,19 @@
 import "../../styles/components/form.css"
+import "../../styles/components/taskForm.css"
 
 import ModalForm from "../../pages/ModalForm";
 import { useEffect, useRef, useState } from "react";
 import LoadingScreen from "../LoadingScreen";
-import { createTask } from "../../api/admin/tasks";
+import { createTask as adminCreateTask } from "../../api/admin/tasks";
+import { createTask as userCreateTask } from "../../api/user/userApi";
 import { SlurmClusterRec } from "../../api/admin/clusters";
 
 import { getUserProfile, JobRequest, TaskRequest } from "../../api/user/userApi";
 import { useAuth } from "../../utils/AuthContext";
 import { JobForm } from "./components/JobForm";
 import { ClusterProfileResponse } from "../../api/admin/profiles";
+import { useTranslation } from 'react-i18next'
+import { NON_LIMITABLE_TRES, normalizeConstraint, TresLimit } from "../../utils/utils";
 
 interface TaskFormProps {
     isOpen: boolean;
@@ -21,11 +25,6 @@ interface TaskFormProps {
     setBusy: (flag: boolean) => void;
 }
 
-export type TresLimit = {
-    type: string;
-    count: number;
-}
-
 const TaskCreationForm: React.FC<TaskFormProps> = ({
     isBusy,
     setBusy,
@@ -35,6 +34,7 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
     onSuccessCall,
     isOpen,
 }) => {
+    const { t } = useTranslation();
     const [script, setScript] = useState("");
     const [jobs, setJobs] = useState<JobRequest[]>([]);
     const [currentProfile, setCurrentProfile] = useState<ClusterProfileResponse>();
@@ -45,6 +45,7 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
             count: value.count ?? 0,
             type: value.type
         }))
+        .filter(val => !NON_LIMITABLE_TRES.has(val.type))
     );
 
     const { role } = useAuth();
@@ -76,11 +77,18 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
 
             const start = Date.now();
 
-            await createTask(
-                clusterId,
-                bindedCluster.name,
-                request
-            );
+            if(role === "ROLE_USER")
+                await userCreateTask(
+                    clusterId,
+                    bindedCluster.name,
+                    normalizeConstraint(request)
+                );
+            else
+                await adminCreateTask(
+                    clusterId,
+                    bindedCluster.name,
+                    normalizeConstraint(request)
+                );
 
             const elapsed = Date.now() - start;
             const minWait = 3000;
@@ -100,7 +108,7 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
             setBusy(false);
         }
     };
-
+    
     const getProfileInfo = async () =>{
             try {
                 const data = await getUserProfile(clusterId, bindedCluster.name);
@@ -119,8 +127,8 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
                     error?.response?.data?.body?.detail ||
                     error?.response?.data?.error ||
                     error?.message ||
-                    'Неизвестная ошибка';
-                alert('Ошибка при добавлении профиля: ' + message);
+                    t('taskForm.unknownError');
+                alert(t('taskForm.profileError') + message);
             }
         }
 
@@ -180,74 +188,70 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
                     name="script"
                     value={script}
                     onChange={e => setScript(e.target.value)}
-                    placeholder="Текст скрипта..."
+                    placeholder={t('taskForm.script')}
                     required
                     disabled={isBusy}
                 />
-                <div className="jobs">
-                {
-                    jobs.map((job, index) => {
-                        return(
-                            <div
-                                key={index}
-                                className="job-accordion"
-                            >
-                                <div
-                                    className="job-accordion_header"
-                                    onClick={() => toggleJob(index)}
-                                >
-                                    <span>
-                                        Job #{index+1}
-                                    </span>
-                                    <div>
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                removeJob(index);
-                                            }}
-                                            disabled={isBusy}
-                                        >
-                                            ✕
-                                        </button>
-                                        <span
-                                            className="job-accodion_icon"
-                                        >
-                                            {openJobIndex === index?
-                                                "^":
-                                                "⌄"
-                                            }
+                <div className="accordion">
+                    {
+                        jobs.map((job, index) => {
+                            return(
+                                <>
+                                    <div
+                                        className="accordion-header"
+                                        onClick={() => toggleJob(index)}
+                                    >
+                                        <span>
+                                            {t('common.job')} #{index+1}
                                         </span>
+                                        <div>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    removeJob(index);
+                                                }}
+                                                disabled={isBusy}
+                                            >
+                                                ✕
+                                            </button>
+                                            <span
+                                                className="job-accordion_icon"
+                                            >
+                                                {openJobIndex === index?
+                                                    "^":
+                                                    "⌄"
+                                                }
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {openJobIndex === index && (
-                                    <div className="job-accordion_body">
-                                        <JobForm
-                                            key={index}
-                                            bindedCluster={bindedCluster}
-                                            isBusy={isBusy}
-                                            job={job}
-                                            index={index}
-                                            changeValue={handleJobChange}
-                                            tresLimits={tresLimits}
-                                            profile={currentProfile}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        )
-                    })
-                }
+                                    {openJobIndex === index && (
+                                        <div className="accordion-body">
+                                            <JobForm
+                                                key={index}
+                                                bindedCluster={bindedCluster}
+                                                isBusy={isBusy}
+                                                job={job}
+                                                index={index}
+                                                profile={currentProfile}
+                                                changeValue={handleJobChange}
+                                                tresLimits={tresLimits}
+                                            />
+                                        </div>
+                                    )}
+                                </>
+                            )
+                        })
+                    }
                 </div>
-
-                <div className="task-form_actions">
+                <div className="form-action">
                     <button
                         type="button"
                         onClick={onClose}
                         disabled={isBusy}
                     >
-                        Назад
+                        {t('common.back')}
                     </button>
 
                     <button
@@ -266,14 +270,14 @@ const TaskCreationForm: React.FC<TaskFormProps> = ({
                         }
                         disabled={isBusy}
                     >
-                        Добавить задачу
+                        {t('taskForm.addJob')}
                     </button>
 
                     <button
                         type="submit"
                         disabled={isBusy || jobs.length === 0}
                     >
-                        Создать
+                        {t('common.create')}
                     </button>
                 </div>
 

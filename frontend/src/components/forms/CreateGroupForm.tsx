@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { createGroup as apiCreateGroup } from "../../api/admin/groups";
 import ModalForm from "../../pages/ModalForm";
 import { ActionFormProps } from '../../utils/Interfaces';
+import { useTranslation } from 'react-i18next'
 
 const CreateGroupForm: React.FC<ActionFormProps> = ({isOpen, onClose, onSuccessCall}) =>{
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
 
     const createGroup = async () => {
         const form = formRef.current;
@@ -30,16 +32,16 @@ const CreateGroupForm: React.FC<ActionFormProps> = ({isOpen, onClose, onSuccessC
     return(
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form ref={formRef} className="form" onSubmit={(e) => e.preventDefault()}>
-                <input type='text' name='name' pattern='^[a-zA-Z0-9._\-]{3,32}$' placeholder='Название...'
+                <input type='text' name='name' pattern='^[a-zA-Z0-9._\-]{3,32}$' placeholder={t('forms.name')}
                     onInvalid={(e) =>
                         (e.currentTarget as HTMLInputElement).setCustomValidity(
-                            "Название должно содержать минимум 3-32 символа, допустимые спецсимволы: . _ -."
+                            t('forms.nameValidation')
                         )} 
                     onInput={(e) => (e.currentTarget as HTMLInputElement).setCustomValidity('')}
                     required></input>
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={() => createGroup()}>Создать</button>
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={() => createGroup()}>{t('common.create')}</button>
                 </div>
             </form>
         </ModalForm>

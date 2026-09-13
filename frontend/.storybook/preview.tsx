@@ -1,5 +1,5 @@
 import React from 'react';
-import { Preview } from '@storybook/react';
+import { Preview } from '@storybook/react-vite';
 import {
   createTheme,
   ThemeProvider,
@@ -25,6 +25,12 @@ const preview: Preview = {
       </ThemeProvider>
     ),
   ],
+
+  parameters: {
+    docs: {
+      codePanel: true
+    }
+  }
 };
  
 export default preview;

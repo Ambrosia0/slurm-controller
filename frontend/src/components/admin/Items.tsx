@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import {deleteCluster, getBindedClusters, getClusters} from '../../api/admin/clusters';
 import { ClusterAdminResponse, SlurmClusterRec } from '../../api/admin/clusters';
 import { PageMetadata } from '../../api/admin/Interfaces';
+import { useTranslation } from 'react-i18next'
 
 
 interface ItemsProps {
@@ -14,8 +15,13 @@ interface ItemsProps {
     setSelectedBindedCluster: (bindedCluster: SlurmClusterRec | null) => void;
 }
 
-const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCluster, selectedCluster, setSelectedCluster}) => {
-    const [clusters, setClusters] = useState<ClusterAdminResponse[]|null>();
+const Items: React.FC<ItemsProps> = ({
+    setSelectedBindedCluster, 
+    selectedCluster, 
+    setSelectedCluster
+}) => {
+    const { t } = useTranslation();
+    const [clusters, setClusters] = useState<ClusterAdminResponse[]>([]);
     const [bindedClusters, setBindedClusters] = useState<SlurmClusterRec[] | null>(null);
 
     const [searchText, setSearchText] = useState<string>('');
@@ -38,7 +44,7 @@ const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCl
 
     const handleDelete = async (cluster: ClusterAdminResponse) =>{
         try {
-            const confirmed = window.confirm(`Удалить кластер ${selectedCluster?.displayedName}?`)
+            const confirmed = window.confirm(t('items.deleteCluster', { name: selectedCluster?.displayedName }))
             if(confirmed){
                 await deleteCluster(cluster.id);
                 setSelectedCluster(null);
@@ -47,7 +53,7 @@ const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCl
                 setPageMeta(data.pageable);
             }
         } catch (error) {
-            alert('Ошибка!');
+            alert(t('items.error'));
             console.log("Error!", error);
         }
     }
@@ -65,7 +71,7 @@ const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCl
                 setClusters(data.content);
             }
         } catch (error) {
-            alert('Ошибка!');
+            alert(t('items.error'));
             console.log("Error!", error);
         }
     }
@@ -76,10 +82,23 @@ const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCl
                 return;
             const data = await getBindedClusters(clusterId);
             setBindedClusters(data);
-        } catch (error) {
-            alert('Ошибка!');
+         } catch (error) {
+            alert(t('items.error'));
             console.log("Error!", error);
         }
+    }
+
+    const handleClusterSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter')
+            setSearchText(e.currentTarget.value);
+    }
+
+    const handleClusterUpdate = () => {
+        setSelectedBindedCluster(null);
+        setSelectedCluster(null);
+        setClusters([]);
+        setBindedClusters(null);
+        fetchClusters()
     }
 
     useEffect(() =>{
@@ -90,17 +109,26 @@ const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCl
         fetchClusters();
     }, [searchText])
 
+    useEffect(() => {
+        const handler = (event: Event) => {
+            const customEvent = event as CustomEvent<ClusterAdminResponse>;
+            setClusters(prev => [...prev, customEvent.detail])
+        };
+
+        document.addEventListener('clusterCreated', handler)
+        
+        return () => {
+            document.removeEventListener('clusterCreated', handler);
+        }
+    }, [])
+
     return (
-        <div id='items-container'>
-            <div id='items-tools-container'>
-                <input id='items-search-field' placeholder='Search...' type='search'   
-                    onKeyDown={(e) => {if (e.key === 'Enter') {setSearchText(e.currentTarget.value);}}}></input>
-                <button className='update-button' title='Обновить' onClick={() => {
-                    setSelectedBindedCluster(null);
-                    setSelectedCluster(null);
-                    setClusters(null);
-                    setBindedClusters(null);
-                    fetchClusters()}}></button>
+        <div id='items-container' className='items-container'>
+            <div id='items-tools-container' className='items-tools-container'>
+                <input id='items-search-field' placeholder={t('items.searchPlaceholder')} type='search'   
+                    onKeyDown={handleClusterSearch}
+                ></input>
+                <button className='update-button' title={t('items.update')} onClick={handleClusterUpdate}></button>
             </div>
             <div id='items-cluster-container'>
                 {clusters != null && clusters.map((cluster, index) => (
@@ -109,7 +137,7 @@ const Items: React.FC<ItemsProps> = ({selectedBindedCluster, setSelectedBindedCl
                             <input type="radio" id={`cluster${index}`} name="clusters" value={cluster.id} onChange={() => toggleChecked(cluster)}></input>
                             <span className='name-hint'>{cluster.displayedName}</span>
                             <div className='hint-container'>
-                                <span className="port-hint">Daemon Port: {cluster.daemonPort}</span>
+                                <span className="port-hint">{t('items.daemonPort')}: {cluster.daemonPort}</span>
                                 <button className='items-action-button' onClick={(e) => { e.stopPropagation(); handleDelete(cluster) }}></button>
                             </div>
                         </label>

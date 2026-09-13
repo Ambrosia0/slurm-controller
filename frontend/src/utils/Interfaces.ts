@@ -117,21 +117,6 @@ export type UnCancellableTaskStatus = "FAILED" | "COMPLETED" | "CANCELLED" | "TI
 
 export const statuses: TaskStatus[] = ["BOOT_FAIL", "CANCELLED", "COMPLETED", "DEADLINE", "FAILED", "NODE_FAIL", "OUT_OF_MEMORY", "PENDING", "PREEMPTED", "RUNNING", "SUSPENDED", "TIMEOUT"];
 
-export function isStatusUnCancellable(value: string): value is UnCancellableTaskStatus {
-    return value === "FAILED" || value === "COMPLETED" || value === "CANCELLED" || value === "TIMEOUT" || value === "PREEMPTED";
-}
-
-export const NON_LIMITABLE_TRES = new Set([
-    "energy",
-    "billing",
-    "pages",
-    "fs",
-])
-
-export const filterTres = (tres: SlurmTres[]) =>{
-    return tres.filter(val => !NON_LIMITABLE_TRES.has(val.type));
-}
-
 export interface Statistics {
     jobsSubmitted: number;
     jobsStarted: number;

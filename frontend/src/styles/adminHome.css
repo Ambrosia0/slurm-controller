@@ -129,6 +129,7 @@ body, button, input, select, textarea, label {
     flex-direction: column;
     justify-content: flex-end;
     width: 100%;
+    gap: 15px;
     flex: 1;
     flex-wrap: wrap;
 }
@@ -139,8 +140,8 @@ body, button, input, select, textarea, label {
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-#add-cluster-button{    
-    background: url("data:image/svg+xml;utf8,%3Csvg%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M15%2012L12%2012M12%2012L9%2012M12%2012L12%209M12%2012L12%2015'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'/%3E%3Cpath%20d='M22%2012C22%2016.714%2022%2019.0711%2020.5355%2020.5355C19.0711%2022%2016.714%2022%2012%2022C7.28595%2022%204.92893%2022%203.46447%2020.5355C2%2019.0711%202%2016.714%202%2012C2%207.28595%202%204.92893%203.46447%203.46447C4.92893%202%207.28595%202%2012%202C16.714%202%2019.0711%202%2020.5355%203.46447C21.5093%204.43821%2021.8356%205.80655%2021.9449%208'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'/%3E%3C/svg%3E") no-repeat top center;
+#add-cluster-button{
+    position: relative;
     background-size: 30px 30px;
     border: none;
     color: #FFFFFF;
@@ -153,32 +154,26 @@ body, button, input, select, textarea, label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+
     padding-bottom: 5px;
     cursor: pointer;
 }
 
-#cluster-import-button{
-    background: url("data:image/svg+xml;utf8,%3Csvg%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M12%204L12%2014M12%2014L15%2011M12%2014L9%2011'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Cpath%20d='M12%2020C7.58172%2020%204%2016.4183%204%2012M20%2012C20%2014.5264%2018.8289%2016.7792%2017%2018.2454'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'/%3E%3C/svg%3E") no-repeat top center;
-    background-size: 30px 30px;
-    border: none;
-    color: #FFFFFF;
-    background-color: transparent;
-    width: 90%;
-    margin-left: 5px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 5px;
-    cursor: pointer;
+#control-panel-container svg {
+    position: absolute;
+    right: 10px;
+    left: 50%;
+    top: 0;
+    transform: translateY(-50%);
+
+    width: 30px;
+    height: 30px;
+    transform: translateX(-50%);
 }
 
 #logout-button{
-    background: url("data:image/svg+xml;utf8,%3Csvg%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M15%2012L6%2012M6%2012L8%2014M6%2012L8%2010'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Cpath%20d='M12%2021.9827C10.4465%2021.9359%209.51995%2021.7626%208.87865%2021.1213C8.11027%2020.3529%208.01382%2019.175%208.00171%2017M16%2021.9983C18.175%2021.9862%2019.3529%2021.8897%2020.1213%2021.1213C21%2020.2426%2021%2018.8284%2021%2016V14V10V8C21%205.17157%2021%203.75736%2020.1213%202.87868C19.2426%202%2017.8284%202%2015%202H14C11.1715%202%209.75733%202%208.87865%202.87868C8.11027%203.64706%208.01382%204.82497%208.00171%207'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'/%3E%3Cpath%20d='M3%209.5V14.5C3%2016.857%203%2018.0355%203.73223%2018.7678C4.46447%2019.5%205.64298%2019.5%208%2019.5M3.73223%205.23223C4.46447%204.5%205.64298%204.5%208%204.5'%20stroke='%23FFFFFF'%20stroke-width='1.5'%20stroke-linecap='round'/%3E%3C/svg%3E") no-repeat top center;
+    position: relative;
     background-size: 30px 30px;
     border: none;
     color: #FFFFFF;

@@ -9,11 +9,13 @@ import "../../styles/components/updateButton.css"
 import { useEffect, useState } from "react";
 import { getTasks, cancelTask as apiCancelTask, TaskFilter, pollTasks } from '../../api/admin/tasks';
 import MovingPanel from "../../utils/MovingPanel";
-import { isStatusUnCancellable, SlurmJob, SlurmJobInfo, statuses } from '../../utils/Interfaces'
+import { SlurmJob, statuses } from '../../utils/Interfaces'
 import { getGroups, GroupAdminResponse } from '../../api/admin/groups'
 import { getUsers, UserAdminResponse } from '../../api/admin/users'
 import { SlurmClusterRec } from '../../api/admin/clusters'
 import TaskCreationForm from '../forms/TaskCreationForm'
+import { useTranslation } from 'react-i18next'
+import { isStatusUnCancellable, mapPollJobToSlurmJob } from '../../utils/utils'
 
 type QueueProps = {
     clusterId: number;
@@ -21,6 +23,7 @@ type QueueProps = {
 }
 
 const Queue: React.FC<QueueProps> = ({ ...props }) => {
+    const { t } = useTranslation();
     const [tasks, setTasks] = useState<SlurmJob[]>([]);
     const [isBusy, setIsBusy] = useState<boolean>(false);
 
@@ -37,26 +40,6 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
         startTime: Math.floor(Date.now() / 1000) - 24 * 60 * 60
     });
 
-    const mapPollJobToSlurmJob = (info: SlurmJobInfo): SlurmJob => ({
-        id: info.jobId ?? 0,
-        name: info.jobId?.toString() ?? 'unknown',
-        cluster: info.cluster ?? '',
-        jobState: {
-            current: info.jobState ?? [],
-            reason: info.stateReason ?? ''
-        },
-        workingDirectory: info.currentWorkingDirectory ?? '',
-        user: info.username ?? '',
-        userId: 0,
-        time: {
-            submission: info.submitTime?.number,
-            start: undefined,
-            end: info.endTime?.number,
-            eligible: info.eligibleTime?.number,
-            suspended: info.suspendTime?.number,
-        },
-        failedNode: info.failedNode,
-    });
 
     const fetchTasks = async () => {
         if (isBusy)
@@ -78,8 +61,8 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
             }
 
             setTasks(Array.from(uniqueMap.values()));
-        } catch (error) {
-            alert('Error!');
+           } catch (error) {
+            alert(t('queue.error'));
             console.log('Error!', error);
         } finally {
             setIsBusy(false);
@@ -92,8 +75,18 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
         setIsBusy(true);
         try {
             await apiCancelTask(props.clusterId, props.bindedCluster.name, taskId);
+            setTasks(prev => prev.map(task => 
+                task.id === taskId?{
+                    ...task,
+                    jobState: {
+                        ...task.jobState,
+                        current: [...task.jobState.current, "CANCELLED"]
+                    }
+                }:
+                task
+            ))
         } catch (error) {
-            alert('Error!');
+            alert(t('queue.error'));
             console.log('Error!', error);
         } finally {
             setIsBusy(false);
@@ -108,19 +101,21 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
                         clusterId: 
                         props.clusterId, 
                         bindedCluster: props.bindedCluster.name, 
-                        name: searchString
+                        name: searchString,
+                        notInCluster: false
                     }
                 ):
                 await getUsers(0, 10, null, 
                     {
                         username: searchString,
                         clusterId: props.clusterId, 
-                        bindedCluster: props.bindedCluster.name
+                        bindedCluster: props.bindedCluster.name,
+                        notInCluster: false
                     }
                 );
             setSearchResult(data.content);
         } catch (error) {
-            alert(error);
+            alert(t('queue.error'));
             console.log('Error!', error);
         }
     }
@@ -231,9 +226,11 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
         return () => clearTimeout(timeout);
     }, [searchText]);
 
+
     useEffect(() => {
         fetchTasks();
     }, [taskFilter])
+
 
     const renderName = (item: UserAdminResponse | GroupAdminResponse) =>{
         if("name" in item){
@@ -247,7 +244,13 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
         <div id='queue-container'>
             <MovingPanel isOpen={dynamicPanel} onClose={() => setDynamicPanel(dynamicPanel? false: true) }>
                 <div className="dynamic-panel-tab">
-                    <button onClick={() => {setIsFormOpen(true); setActiveForm('taskCreation')}}>Создать задачу</button>
+                    <button onClick={() => {
+                        setIsFormOpen(true); 
+                        setActiveForm('taskCreation')
+                        }}
+                    >
+                        {t("queue.createTask")}
+                    </button>
                 </div>
 
                 <div className="dynamic-panel-tab-content">
@@ -291,46 +294,46 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
                         )}
                     </div>
                     <label className="select-label">
-                        Опции поиска
+                        {t('queue.searchOptions')}
                         <select
                             onChange={(e) => handleSearchOptionChange(e.target.value as 'group' | 'user')}
                             className="custom-select">
-                            <option value="" disabled>Поиск по..</option>
-                            <option value="group">По группе</option>
-                            <option value="user">По пользователю</option>
+                            <option value="" disabled>{t('queue.searchByPlaceholder')}</option>
+                            <option value="group">{t('queue.byGroup')}</option>
+                            <option value="user">{t('queue.byUser')}</option>
                         </select>
                         <span className="select-arrow">▼</span>
 
-                        <select
+                         <select
                             onChange={(e) => handleTaskSortChange([e.target.value])}
                             className="custom-select">
-                            <option value="" selected>Все</option>
+                            <option value="" selected>{t('queue.all')}</option>
                             {statuses.map((stat, index) => {
                                 return <option key={index} value={stat}>{stat}</option>
                             })}
                         </select>
                         <span className="select-arrow">▼</span>
                     </label>
-                    <label className="select-label">
-                        Даты поиска
+                     <label className="select-label">
+                        {t('queue.searchDates')}
                         <input type='datetime-local' value={taskFilter.startTime? toDateTimeLocal(taskFilter.startTime): ''} onChange={handleStartChange} />
                         <input type='datetime-local' value={taskFilter.endTime? toDateTimeLocal(taskFilter.endTime) : ''} onChange={handleEndChange} />
                         <button className='update-button' type='button' onClick={fetchTasks}></button>
                     </label>
                 </div>
-                <div className='table-container'>
-                    {isBusy? <h2>Загрузка задач...</h2> : (tasks.length !== 0)? <>
+                 <div className='table-container'>
+                    {isBusy? <h2>{t('queue.loading')}</h2> : (tasks.length !== 0)? <>
                         <table className='table'>
                             <thead>
                                 <tr>
                                     <th>№</th>
-                                    <th>ID задачи</th>
-                                    <th>Имя пользователя</th>
-                                    <th>ID пользователя</th>
-                                    <th>Статус</th>
-                                    <th>Дата/время создания</th>
-                                    <th>Директория</th>
-                                    <th>Действие</th>
+                                    <th>{t('queue.taskId')}</th>
+                                    <th>{t('queue.username')}</th>
+                                    <th>{t('queue.status')}</th>
+                                    <th>{t('queue.createdDate')}</th>
+                                    <th>{t('queue.endDate')}</th>
+                                    <th>{t('queue.directory')}</th>
+                                    <th>{t('queue.action')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -339,18 +342,18 @@ const Queue: React.FC<QueueProps> = ({ ...props }) => {
                                         <td>{index + 1}</td>
                                         <td>{task.id}</td>
                                         <td>{task.user}</td>
-                                        <td>{task.association?.id ?? '-'}</td>
-                                        <td>{task.jobState.current}</td>
-                                        <td>{task.time?.start ? new Date(task.time.start * 1000).toLocaleString() : '-'}</td>
+                                        <td>{task.jobState.current[task.jobState.current.length - 1]}</td>
+                                        <td>{task.time?.submission ? new Date(task.time.submission * 1000).toLocaleString() : '-'}</td>
+                                        <td>{task.time?.end ? new Date(task.time.end * 1000).toLocaleString() : '-'}</td>
                                         <td>{task.workingDirectory}</td>
                                         <td>
-                                            {!isStatusUnCancellable(task.jobState.current[task.jobState.current.length - 1]) && <button onClick={() => cancelTask(task.id)}>Отменить</button>}
+                                             {!isStatusUnCancellable(task.jobState.current[task.jobState.current.length - 1]) && <button onClick={() => cancelTask(task.id)}>{t('queue.cancel')}</button>}
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
-                        </> : <h2>Задач нету...</h2>
+                           </table>
+                        </> : <h2>{t('queue.noTasks')}</h2>
                     }
                 </div>
             </div>

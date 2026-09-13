@@ -6,6 +6,7 @@ import { revokeAccessFromGroup } from "../../api/admin/profiles";
 import LoadingScreen from "../LoadingScreen";
 import { getGroups as apiGetGroups, GroupAdminResponse } from "../../api/admin/groups";
 import { ProfileActionFormProps } from "../../utils/Interfaces";
+import { useTranslation } from 'react-i18next'
 
 
 const RevokeGroupProfile: React.FC<ProfileActionFormProps> = ({
@@ -19,6 +20,7 @@ const RevokeGroupProfile: React.FC<ProfileActionFormProps> = ({
 }) =>{
     const [groups, setGroups] = useState<GroupAdminResponse[]>([]);
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
 
     const revokeAccess = async () =>{
         if(!formRef.current || isBusy)
@@ -64,16 +66,16 @@ const RevokeGroupProfile: React.FC<ProfileActionFormProps> = ({
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form className="form" ref={formRef} onSubmit={(e) => e.preventDefault()}>
                 <label>
-                    Группа:
+                    {t('forms.groupLabel')}
                     <select name="group" onFocus={handleFocus} required>
                         {groups.length !== 0 && groups.map((group, index) => (
                             <option key={index} value={group.id}>{group.name}</option>
                         ))}
                     </select>
                 </label>
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={() => revokeAccess()}>Отозвать доступ</button>
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={() => revokeAccess()}>{t('forms.revokeAccess')}</button>
                 </div>
                 {isBusy && <LoadingScreen />}
             </form>

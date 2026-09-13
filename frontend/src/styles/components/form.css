@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    max-height: 80vh;
     gap: 10px;
 }
 
@@ -27,6 +28,7 @@
 .form input[type="text"]:focus,
 .form input[type="password"]:focus,
 .form input[type="number"]:focus,
+
 .form select:focus {
     outline: none;
     border-bottom: 2px solid #ffffffcc;
@@ -50,6 +52,11 @@
     margin-right: 8px;
 }
 
+.form span {
+    color: #ffffffb0;
+    padding-left: 10px;
+}
+
 .form select {
     appearance: none;
     -webkit-appearance: none;
@@ -67,7 +74,7 @@
     color: #ffffff;
 }
 
-.form div {
+.form > .form-action {
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -76,7 +83,15 @@
     padding-top: 20px;
 }
 
-.form div button {
+.form button {
+    color: #ffffff9f;
+    border: 2px solid #ffffff7e;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.form .form-action button {
     width: 100%;
     height: 40px;
     background-color: transparent;
@@ -99,6 +114,7 @@
     border-color: #ffffff;
     color: #ffffff;
 }
+
 
 .form ul {
     list-style: none;
@@ -137,4 +153,38 @@
 
 .form ul li button:hover {
     color: #ff3b30;
+}
+
+.form textarea {
+    min-height: 80px;
+    outline: none;
+    border-radius: 4px;
+    background-color: #f7f4f4e3;
+}
+
+.form > .accordion {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    gap: 10px;
+}
+
+.form > .accordion > .accordion-header {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;    
+}
+
+.form > .accordion > .accordion-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form > .accordion > .accordion-header > span {
+    display: inline-block;
+    width: 60px;
 }

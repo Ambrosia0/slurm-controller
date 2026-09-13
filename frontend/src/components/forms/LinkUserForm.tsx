@@ -6,9 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { getGroups as apiGetGroups } from "../../api/admin/groups" 
 import { ActionFormProps } from "../../utils/Interfaces";
 import { getUsers, UserAdminResponse } from "../../api/admin/users";
+import { useTranslation } from 'react-i18next'
 
 const LinkUserForm: React.FC<ActionFormProps> = ({onSuccessCall,isOpen, onClose}) =>{
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
 
     const [searchResult, setSearchResult] = useState<UserAdminResponse[]>([]);
     const [searchText, setSearchText] = useState<string>('');
@@ -21,7 +23,7 @@ const LinkUserForm: React.FC<ActionFormProps> = ({onSuccessCall,isOpen, onClose}
             return;
         }
         if (selectedUsers.length === 0){
-            alert("Нужно выбрать пользователей для группировки!");
+            alert(t('forms.selectUsersForGrouping'));
         }
         const form = formRef.current;
         if(form.checkValidity()){
@@ -98,7 +100,7 @@ const LinkUserForm: React.FC<ActionFormProps> = ({onSuccessCall,isOpen, onClose}
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form className="form" ref={formRef} onSubmit={(e) => e.preventDefault()}>
                 <label>
-                    Группа:
+                    {t('forms.groupLabel')}
                     <select name="group" onFocus={handleFocus} required>
                         {groups.length !== 0 && groups.map((group, index) => (
                             <option key={index} value={group.id}>{group.name}</option>
@@ -106,7 +108,7 @@ const LinkUserForm: React.FC<ActionFormProps> = ({onSuccessCall,isOpen, onClose}
                     </select>
                 </label>
                     
-                <input type="text" placeholder="Поиск..." 
+                <input type="text" placeholder={t('forms.search')} 
                     value={searchText} onChange={(e) => setSearchText(e.target.value)}/>
 
                 {searchResult.length > 0 &&(
@@ -127,9 +129,9 @@ const LinkUserForm: React.FC<ActionFormProps> = ({onSuccessCall,isOpen, onClose}
                     ))}
                 </ul>
 
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={() => groupUser()}>Сгруппировать</button>
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={() => groupUser()}>{t('forms.groupUser')}</button>
                 </div>
             </form>
         </ModalForm>
