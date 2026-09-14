@@ -7,15 +7,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ambrosia.cluster_controller.model.DTO.admin.request.ClusterProfileAdminRequest;
@@ -40,6 +41,7 @@ public class AdminProfileController {
 
     private final ClusterProfileManageService clusterProfileService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{clusterId}/bound/{clusterName}/profile")
     public void createProfile(
             @PathVariable Long clusterId,
@@ -57,7 +59,7 @@ public class AdminProfileController {
         clusterProfileService.updateAccessResources(clusterId, clusterName, profileRequests);
     }
 
-    @GetMapping("/{clusterId}/bound/{bindedCluster}/download")
+    @GetMapping("/{clusterId}/bound/{clusterName}/download")
     public ResponseEntity<Resource> downloadProfiles(
             @PathVariable Long clusterId,
             @PathVariable String clusterName,
@@ -82,7 +84,7 @@ public class AdminProfileController {
     @DeleteMapping("/{clusterId}/bound/{clusterName}/profile")
     public void deleteProfiles(
             @PathVariable Long clusterId,
-            @RequestBody Set<Long> userIds,
+            @RequestParam Set<Long> userIds,
             @PathVariable String clusterName){
         clusterProfileService.revokeAccess(clusterId, clusterName, userIds);
     }

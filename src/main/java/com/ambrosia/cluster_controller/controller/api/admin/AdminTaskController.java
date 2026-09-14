@@ -1,6 +1,7 @@
 package com.ambrosia.cluster_controller.controller.api.admin;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ambrosia.cluster_controller.model.DTO.filters.TaskFilter;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +54,7 @@ public class AdminTaskController {
         );
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/bound/{clusterName}/task")
     public void create(
             @PathVariable Long clusterId,

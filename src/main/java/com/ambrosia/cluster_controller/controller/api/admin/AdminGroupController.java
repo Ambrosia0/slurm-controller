@@ -44,13 +44,13 @@ public class AdminGroupController {
     @PostMapping("/{groupId}/users")
     public void groupUsers(
             @PathVariable Long groupId,
-            @RequestBody @Validated GroupUsersRequest request) {
-        groupService.groupUsers(groupId, request);
+            @RequestParam Set<Long> userIds) {
+        groupService.groupUsers(groupId, userIds);
     }
 
     @DeleteMapping("/{groupId}/users")
     public void ungroupUsers(
-            @RequestBody Set<Long> userIds) {
+            @RequestParam Set<Long> userIds) {
         groupService.ungroupUsers(userIds);
     }
 

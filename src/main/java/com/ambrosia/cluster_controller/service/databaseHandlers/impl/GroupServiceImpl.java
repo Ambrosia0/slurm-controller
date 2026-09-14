@@ -20,7 +20,6 @@ import com.ambrosia.cluster_controller.model.DTO.admin.request.GroupAdminRequest
 import com.ambrosia.cluster_controller.model.DTO.admin.response.GroupAdminResponse;
 import com.ambrosia.cluster_controller.model.DTO.admin.response.UserAdminResponse;
 import com.ambrosia.cluster_controller.model.DTO.filters.GroupFilter;
-import com.ambrosia.cluster_controller.model.DTO.generic.GroupUsersRequest;
 import com.ambrosia.cluster_controller.model.entity.Group;
 import com.ambrosia.cluster_controller.model.entity.User;
 import com.ambrosia.cluster_controller.repository.GroupRepository;
@@ -101,18 +100,18 @@ public class GroupServiceImpl implements GroupManageService {
 
     @Transactional 
     @Override
-    public void groupUsers(long groupId, GroupUsersRequest request) {
+    public void groupUsers(long groupId, Set<Long> userIds) {
         var group = groupRepository.findById(groupId)
             .orElseThrow(() -> new GroupDoesntExistException());
 
         var ids = userRepository.findAdminIds();
-        if(request.userIds().stream().anyMatch(ids::contains)){
+        if(userIds.stream().anyMatch(ids::contains)){
             throw new UserDoesntExistException();
         }
-        if(!userRepository.compareSize(request.userIds(), request.userIds().size())){
+        if(!userRepository.compareSize(userIds, userIds.size())){
             throw new UserDoesntExistException();
         }
-        userRepository.groupUsers(group, request.userIds());
+        userRepository.groupUsers(group, userIds);
     }
 
     @Transactional

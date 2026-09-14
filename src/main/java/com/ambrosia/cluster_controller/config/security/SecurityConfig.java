@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.client.RestClient;
 
 import com.ambrosia.cluster_controller.config.AppConfigurationProperties;
+import com.ambrosia.cluster_controller.config.security.tokenManager.JwtManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,12 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final AuthenticationFilter authenticationFilter;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(
+                HttpSecurity httpSecurity, 
+                JwtManager jwtManager, 
+                CustomUserDetailsService customUserDetailsService) throws Exception{
+        var filter = new AuthenticationFilter(jwtManager, customUserDetailsService);
         return httpSecurity
             .cors(Customizer.withDefaults())
             .csrf(
@@ -51,7 +54,7 @@ public class SecurityConfig {
                 formLogin -> formLogin
                     .disable()
             )
-            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(
                 httpBasic -> httpBasic
                     .disable()

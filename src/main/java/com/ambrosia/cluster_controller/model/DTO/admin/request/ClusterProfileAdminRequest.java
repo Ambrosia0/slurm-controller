@@ -7,7 +7,10 @@ import com.ambrosia.cluster_controller.util.TresUtils;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 
+// null fields are considered unlimited
+@Builder 
 @FieldEqualsOrMore(first = "hardLimit", second = "softLimit", message = "Hard limit must be more or equals to soft limit")
 public record ClusterProfileAdminRequest(
     @NotNull

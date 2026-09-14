@@ -14,7 +14,7 @@ public class CustomUserDetails implements UserDetails {
     private boolean active;
     private GrantedAuthority authority;
 
-    CustomUserDetails(long id, String username, String password, boolean active,
+    public CustomUserDetails(long id, String username, String password, boolean active,
             String role){
         this.id = id;
         this.username = username;
