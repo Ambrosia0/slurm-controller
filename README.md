@@ -28,7 +28,6 @@ The main idea of this project is to minimize the effort required to create and a
 - **Framework:** React 19
 - **Terminal:** xterm.js with addons (attach, fit, WebGL)
 - **Charts:** Recharts (for cluster statistics)
-- **Routing:** React Router DOM v7
 - **HTTP Client:** Axios
 - **i18n:** i18next
 
