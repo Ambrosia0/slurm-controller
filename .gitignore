@@ -39,3 +39,4 @@ out/
 *dev*
 *.zip
 logs
+src/main/resources/static/

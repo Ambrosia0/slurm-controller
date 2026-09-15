@@ -47,7 +47,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/user", "/api/user/**").hasRole("ADMIN")
                     .requestMatchers("/api/group", "/api/group/**").hasRole("ADMIN")
                     .requestMatchers("/api/login").permitAll()
-                    .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/manifest.json").permitAll()
+                    .requestMatchers("/*", "/assets/**").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(
