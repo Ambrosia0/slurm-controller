@@ -25,11 +25,12 @@ The main idea of this project is to minimize the effort required to create and a
 - **Utilities:** Lombok, PTY4J (pseudo-terminal for Unix-like terminals)
 
 ### Frontend
-- **Framework:** React 19 (Create React App)
+- **Framework:** React 19
 - **Terminal:** xterm.js with addons (attach, fit, WebGL)
 - **Charts:** Recharts (for cluster statistics)
 - **Routing:** React Router DOM v7
 - **HTTP Client:** Axios
+- **i18n:** i18next
 
 ## Architecture
 
