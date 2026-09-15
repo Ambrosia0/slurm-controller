@@ -67,7 +67,9 @@ export const deleteProfile = async (clusterId: number, bindedCluster: string, us
 
 export const deleteProfiles = async (clusterId: number, bindedCluster: string, userIds: number[]) => {
     return await apiClient.delete(`/api/admin/cluster/${clusterId}/bound/${bindedCluster}/profile`, {
-        data: userIds
+        params: {
+            userIds
+        }
     });
 }
 

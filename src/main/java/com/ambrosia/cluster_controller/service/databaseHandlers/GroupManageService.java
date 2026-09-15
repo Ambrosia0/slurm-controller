@@ -10,7 +10,6 @@ import com.ambrosia.cluster_controller.model.DTO.admin.request.GroupAdminRequest
 import com.ambrosia.cluster_controller.model.DTO.admin.response.GroupAdminResponse;
 import com.ambrosia.cluster_controller.model.DTO.admin.response.UserAdminResponse;
 import com.ambrosia.cluster_controller.model.DTO.filters.GroupFilter;
-import com.ambrosia.cluster_controller.model.DTO.generic.GroupUsersRequest;
 import com.ambrosia.cluster_controller.model.entity.Group;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,9 +43,9 @@ public interface GroupManageService {
     /**
      * Groups multiple users
      * @param groupId Id of the group to use
-     * @param request DTO containing user information
+     * @param userIds Id of the grouped users
      */
-    void groupUsers(long groupId, GroupUsersRequest request);
+    void groupUsers(long groupId, Set<Long> userIds);
 
     /**
      * Ungroups users

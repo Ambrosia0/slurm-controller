@@ -31,7 +31,7 @@ app:
     password-encryption-salt: ${PASSWORD_ENCRYPTION_SALT}
     user-group: ${ADMIN_GROUP}
     account: ${SLURM_DEFAULT_ACCOUNT:default}
-    slurm-token-duration: ${SLURM_TOKEN_DURATION:3600}
+    slurm-token-duration: ${SLURM_TOKEN_DURATION:900}
     disk-quota-path: ${DISK_QUOTA_PATH:/data}
     home-directory-path: ${HOME_DIRACTORY_PATH:/home}
     admin-username: ${ADMIN_USERNAME}
@@ -43,6 +43,8 @@ spring:
     activate:
       on-profile:
       - test
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     hikari:
       connection-timeout: 30000

@@ -34,10 +34,6 @@ public record SlurmJobSubmit(
     @JsonInclude(value = Include.NON_NULL)
     String account,
 
-    @JsonProperty("user_name")
-    @JsonInclude(value = Include.NON_NULL)
-    String userName,
-
     @JsonProperty("argv")
     @JsonInclude(value = Include.NON_NULL)
     List<String> argv,
@@ -45,6 +41,10 @@ public record SlurmJobSubmit(
     @JsonProperty("begin_time")
     @JsonInclude(value = Include.NON_NULL)
     SlurmUint64NoVal beginTime,
+
+    @JsonProperty("user_id")
+    @JsonInclude(value = Include.NON_NULL)
+    String userId,
 
     @JsonInclude(value = Include.NON_NULL)
     Long deadline,

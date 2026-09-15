@@ -1,6 +1,7 @@
 package com.ambrosia.cluster_controller.controller.api.user;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ambrosia.cluster_controller.config.security.CustomUserDetails;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cluster/{clusterId}")
-@PreAuthorize("hasRole('USER')")
 @Validated
 public class UserTaskController {
     private final UserTaskService taskService;
@@ -64,7 +64,7 @@ public class UserTaskController {
         );
     }
     
-    
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/bound/{clusterName}/task")
     public void createTask(
         @PathVariable Long clusterId,

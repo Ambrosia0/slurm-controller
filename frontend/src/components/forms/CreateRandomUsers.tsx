@@ -5,6 +5,7 @@ import ModalForm from "../../pages/ModalForm";
 import RandExp from "randexp";
 import { importUsersFromJson } from "../../api/admin/users";
 import { ActionFormProps } from "../../utils/Interfaces";
+import { useTranslation } from 'react-i18next'
 
 interface UserCreationProps{
     username: string,
@@ -19,6 +20,7 @@ interface GroupProps{
 const CreateRandomUsers: React.FC<ActionFormProps> = ({onClose, onSuccessCall, isOpen}) =>{
     const [isGrouped, setIsGrouped] = useState<boolean>(false);
     const formRef = useRef<HTMLFormElement>(null);
+    const { t } = useTranslation();
 
     const generateUsers = async () =>{
         const form = formRef.current;
@@ -55,23 +57,23 @@ const CreateRandomUsers: React.FC<ActionFormProps> = ({onClose, onSuccessCall, i
         <ModalForm isOpen={isOpen} onClose={onClose}>
             <form ref={formRef} className="form" onSubmit={(e) => e.preventDefault()}>
                 <input type="text" name="prefix" pattern='[a-zA-Z0-9._\-]{3,32}$' 
-                 placeholder="Префикс (опционально)..." 
+                 placeholder={t('forms.prefix')} 
                     onInvalid={(e) =>
                         (e.currentTarget as HTMLInputElement).setCustomValidity(
-                            "Допустимые спецсимволы: . _ -."
+                            t('forms.prefixSpecialChars')
                         )}
                     onInput={(e) => {
                         e.currentTarget.setCustomValidity("");
                     }} required></input>
-                <input type="number" min={1} max={1000} name="numberOfUsers" placeholder="Количество пользователей..." required></input>
+                <input type="number" min={1} max={1000} name="numberOfUsers" placeholder={t('forms.numberOfUsers')} required></input>
                 <label>
                 <input type="checkbox" checked={isGrouped} onChange={(e) => setIsGrouped(e.target.checked)}></input>
-                    Сгруппировать?
+                    {t('forms.grouped')}
                 </label>
-                {isGrouped === true && <input type="text" name="group"  placeholder="Название группы..."></input>}
-                <div>
-                    <button onClick={onClose}>Назад</button>
-                    <button onClick={()=>generateUsers()}>Создать</button>
+                {isGrouped === true && <input type="text" name="group"  placeholder={t('forms.groupNameInput')}></input>}
+                <div className="form-action">
+                    <button onClick={onClose}>{t('common.back')}</button>
+                    <button onClick={()=>generateUsers()}>{t('common.create')}</button>
                 </div>
             </form>
         </ModalForm>

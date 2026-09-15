@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { TresLimit } from "../TaskCreationForm";
+import { useTranslation } from "react-i18next";
 import { JobRequest } from "../../../api/user/userApi";
 import { SlurmClusterRec } from "../../../api/admin/clusters";
 import { ClusterProfileResponse } from "../../../api/admin/profiles";
+import { formatTime, TresLimit } from "../../../utils/utils";
 
 type JobFormProps = {
-    profile?: ClusterProfileResponse;
     bindedCluster: SlurmClusterRec;
+    profile?: ClusterProfileResponse;
     job: JobRequest;
     index: number;
     tresLimits: TresLimit[];
@@ -15,43 +16,21 @@ type JobFormProps = {
 }
 
 export const JobForm: React.FC<JobFormProps> = ({
-    profile,
     bindedCluster,
     isBusy,
     tresLimits,
+    profile,
     job,
     index,
     changeValue
 }) => {
+    const { t } = useTranslation();
     const [args, setArgs] = useState<string[]>([]);
     const [inputVal, setInputVal] = useState("");
 
     
     const findTres = (type: string): TresLimit =>{
         return tresLimits.find(val => val.type === type) ?? {count: 0, type: "unknown"};
-    }
-
-    const cpuTres = useMemo(
-        () => findTres("cpu"),
-        [tresLimits]
-    );
-
-    const memTres = useMemo(
-        () => findTres("mem"),
-        [tresLimits]
-    );
-
-    const otherTres = useMemo(
-        () =>
-            tresLimits.filter(
-                t => t.type !== "cpu" && t.type !== "mem"
-            ),
-        [tresLimits]
-    );
-
-
-    const handleChange = () =>{
-
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -81,7 +60,10 @@ export const JobForm: React.FC<JobFormProps> = ({
             }
         })
 
-        tresMap.set(type, value);
+        if(value !== 0)
+            tresMap.set(type, value);
+        else
+            tresMap.delete(type);
 
         const tresPerJob = Array.from(tresMap.entries())
             .map(([tresType, count]) => `${tresType}=${count}`)
@@ -115,6 +97,18 @@ export const JobForm: React.FC<JobFormProps> = ({
         )
     }
 
+    const handleTaskLiveChange = (value: number) => {
+        if(profile && value > profile.maxTaskLiveTime)
+            return;
+        changeValue(
+            {
+                ...job,
+                maxTaskLiveTime: value
+            },
+            index
+        )
+    }
+
     const currentTres: TresLimit[] = job.tresPerJob?.split(",")
         .map((val, _) => {
             const tresValue = val.split("=");
@@ -124,16 +118,41 @@ export const JobForm: React.FC<JobFormProps> = ({
             })
         }) ?? [];
 
+    const stringToNumber = (number: string) => {
+        const val = Number(number);
+        return number === ""? undefined: val;
+    }
+
     return(
         <>
-            <input
-                type="text"
-                placeholder="Аргумент..."
-                value={inputVal}
-                onChange={e => setInputVal(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isBusy}
-            />
+            <div>
+                <span>{t('jobForm.arguments')}</span>
+                <input
+                    type="text"
+                    placeholder={t('jobForm.argumentPlaceholder')}
+                    value={inputVal}
+                    onChange={e => setInputVal(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    disabled={isBusy}
+                />
+                <div className="arg-list">
+                    {job.args?.map((val, index) => {
+                        return(
+                            <div 
+                                key={index}
+                                className="arg-container"
+                                onClick={(e) => {
+                                    e.preventDefault(); 
+                                    handleArgRemove(index);
+                                }}
+                            >
+                                <span>{val}</span>
+                                <span className="arg-container-close">✕</span>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
 
             {args.length > 0 && (
                 <ul>
@@ -153,88 +172,103 @@ export const JobForm: React.FC<JobFormProps> = ({
                 </ul>
             )}
 
-            <input
-                type="text"
-                name="directory"
-                placeholder="Рабочая директория..."
-                required
-                disabled={isBusy}
-            />
-
-            <input
-                type="number"
-                name="maxCpu"
-                min={1}
-                value={currentTres.find(val => val.type === "cpu")?.count}
-                onChange={(e) => handleTresChange("cpu", Number(e.target.value))}
-                max={cpuTres?.count}
-                placeholder={`CPU на job (макс: ${findTres("cpu").count})`}
-                required
-                disabled={isBusy}
-            />
-
-            <input
-                type="number"
-                name="maxMem"
-                min={1}
-                value={currentTres.find(val => val.type === "mem")?.count}
-                onChange={(e) => handleTresChange("mem", Number(e.target.value))}
-                max={memTres?.count}
-                placeholder={`RAM на job, MiB (макс: ${findTres("mem").count})`}
-                required
-                disabled={isBusy}
-            />
-
-            {otherTres.map(tres => (
+            <div>
+                <span>{t('jobForm.workingDirectory')}</span>
                 <input
-                    key={tres.type}
-                    type="number"
-                    name={`maxTres_${tres.type}`}
-                    value={currentTres.find(val => val.type === tres.type)?.count}
-                    onChange={(e) => handleTresChange(tres.type, Number(e.target.value))}
-                    min={0}
-                    max={tres.count}
-                    placeholder={`${tres.type} на job (макс: ${findTres(tres.type).count})`}
+                    type="text"
+                    name="directory"
+                    placeholder={t('jobForm.workingDirectoryPlaceholder')}
+                    value={job.directory}
+                    onChange={(e) => changeValue({
+                        ...job,
+                        directory: e.target.value
+                    }, index)}
                     disabled={isBusy}
                 />
+            </div>
+            {tresLimits.map(tres => (
+                <div>
+                    <span>{t('jobForm.tresPerJob', { type: tres.type, max: findTres(tres.type).count })}</span>
+                    <input
+                        key={tres.type}
+                        type="number"
+                        name={`maxTres_${tres.type}`}
+                        value={currentTres.find(val => val.type === tres.type)?.count}
+                        onChange={(e) => handleTresChange(tres.type, Number(e.target.value))}
+                        min={0}
+                        max={tres.count}
+                        placeholder={t('jobForm.tresPlaceholder', { type: tres.type })}
+                        disabled={isBusy}
+                    />
+                </div>
             ))}
 
-            <input
-                type="text"
-                name="nodes"
-                value={job.nodes}
-                placeholder={`Диапазон nodes, например 1-15:4 (доступно: ${bindedCluster.nodes || "?"})`}
-                disabled={isBusy}
-            />
+            <div>
+                <span>{bindedCluster.nodes}</span>
+                <input
+                    type="text"
+                    name="nodes"
+                    value={job.nodes}
+                    onChange={(e) => changeValue({...job, nodes: e.target.value}, index)}
+                    placeholder={t('jobForm.nodesRange', { available: bindedCluster.nodes || '?' })}
+                    disabled={isBusy}
+                />
+            </div>
 
-            <input
-                type="number"
-                name="tasks"
-                value={job.numberOfTasks}
-                min={1}
-                placeholder="Число задач"
-                required
-                disabled={isBusy}
-            />
+            <div>
+                <span>{t('jobForm.numberOfTasks')}</span>
+                <input
+                    type="number"
+                    name="tasks"
+                    value={job.numberOfTasks}
+                    onChange={(e) => changeValue({
+                        ...job, 
+                        numberOfTasks: stringToNumber(e.target.value)
+                    }, index)}
+                    placeholder={t('jobForm.numberOfTasksPlaceholder')}
+                    required
+                    disabled={isBusy}
+                />
+            </div>
 
-            <input
-                type="number"
-                name="cpusPerTask"
-                value={job.cpusPerTask}
-                min={0}
-                placeholder="CPU на задачу (опционально)"
-                disabled={isBusy}
-            />
+            <div>
+                <span>{t('jobForm.cpuPerTask')}</span>
+                <input
+                    type="number"
+                    name="cpusPerTask"
+                    onChange={(e) => changeValue({...job, cpusPerTask: Number(e.target.value)}, index)}
+                    value={job.cpusPerTask}
+                    min={0}
+                    placeholder={t('jobForm.cpuPerTaskPlaceholder')}
+                    disabled={isBusy}
+                />
+            </div>
+            
+             <div>
+                <span>{profile ? t('jobForm.maxExecutionTimeWithLimit', { limit: profile.maxTaskLiveTime }) : t('jobForm.maxExecutionTime')}</span>
+                <input
+                    type="number"
+                    name="maxTaskLiveTime"
+                    onChange={(e) => handleTaskLiveChange(Number(e.target.value))}
+                    min={0}
+                    value={job.maxTaskLiveTime}
+                    placeholder={t('jobForm.maxExecutionTimePlaceholder')}
+                    required
+                    disabled={isBusy}
+                />
+                <span>{
+                    formatTime(
+                        job.maxTaskLiveTime ?? 0,
+                        t('jobForm.hours'),
+                        t('jobForm.minutes'),
+                        t('jobForm.seconds')
+                    )}
+                </span>
+            </div>
 
-            <input
-                type="number"
-                name="maxTaskLiveTime"
-                min={128}
-                value={job.maxTaskLiveTime}
-                placeholder="Максимальное время выполнения"
-                required
-                disabled={isBusy}
-            />
+            <div>
+                <span></span>
+            </div>
         </>
     )
 }

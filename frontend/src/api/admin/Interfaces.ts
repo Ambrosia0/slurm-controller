@@ -13,5 +13,13 @@ export interface Sort {
 export interface PageResponse<T> {
     content: T[];
     pageable: PageMetadata;
+    totalElements: number;
+    totalPages: number;
+    numberOfElements: number;
+    number: number;
+    size: number;
+    empty: boolean;
+    first: boolean;
+    last: boolean;
 }
 

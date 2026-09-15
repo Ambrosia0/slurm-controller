@@ -7,15 +7,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ambrosia.cluster_controller.model.DTO.admin.request.ClusterProfileAdminRequest;
@@ -35,35 +36,35 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/cluster")
-@PreAuthorize("hasRole('ADMIN')")
 @Validated
 public class AdminProfileController {
 
     private final ClusterProfileManageService clusterProfileService;
 
-    @PostMapping("/{clusterId}/bound/{bindedCluster}/profile")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{clusterId}/bound/{clusterName}/profile")
     public void createProfile(
             @PathVariable Long clusterId,
-            @PathVariable String bindedCluster,
+            @PathVariable String clusterName,
             @RequestBody @Valid List<ClusterProfileAdminRequest> profileRequests
     ) {
-        clusterProfileService.provideAccess(clusterId, bindedCluster, profileRequests);
+        clusterProfileService.provideAccess(clusterId, clusterName, profileRequests);
     }
 
-    @PutMapping("/{clusterId}/bound/{bindedCluster}/profile")
+    @PutMapping("/{clusterId}/bound/{clusterName}/profile")
     public void updateProfile(
             @PathVariable Long clusterId,
-            @PathVariable String bindedCluster,
+            @PathVariable String clusterName,
             @RequestBody @Valid List<ClusterProfileAdminRequest> profileRequests) {
-        clusterProfileService.updateAccessResources(clusterId, bindedCluster, profileRequests);
+        clusterProfileService.updateAccessResources(clusterId, clusterName, profileRequests);
     }
 
-    @GetMapping("/{clusterId}/bound/{bindedCluster}/download")
+    @GetMapping("/{clusterId}/bound/{clusterName}/download")
     public ResponseEntity<Resource> downloadProfiles(
             @PathVariable Long clusterId,
-            @PathVariable String bindedCluster,
+            @PathVariable String clusterName,
             @RequestParam Set<Long> userIds){
-        var resource = clusterProfileService.downloadProfiles(clusterId, bindedCluster, userIds);
+        var resource = clusterProfileService.downloadProfiles(clusterId, clusterName, userIds);
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .headers(headers->{
@@ -72,20 +73,20 @@ public class AdminProfileController {
             .body(resource);
     }
 
-    @DeleteMapping("/{clusterId}/bound/{bindedCluster}/profile/{userId}")
+    @DeleteMapping("/{clusterId}/bound/{clusterName}/profile/{userId}")
     public void deleteProfile(
             @PathVariable Long clusterId,
             @PathVariable Long userId,
-            @PathVariable String bindedCluster){
-        clusterProfileService.revokeAccess(clusterId, bindedCluster, Set.of(userId));
+            @PathVariable String clusterName){
+        clusterProfileService.revokeAccess(clusterId, clusterName, Set.of(userId));
     }
 
-    @DeleteMapping("/{clusterId}/bound/{bindedCluster}/profile")
+    @DeleteMapping("/{clusterId}/bound/{clusterName}/profile")
     public void deleteProfiles(
             @PathVariable Long clusterId,
-            @RequestBody Set<Long> userIds,
-            @PathVariable String bindedCluster){
-        clusterProfileService.revokeAccess(clusterId, bindedCluster, userIds);
+            @RequestParam Set<Long> userIds,
+            @PathVariable String clusterName){
+        clusterProfileService.revokeAccess(clusterId, clusterName, userIds);
     }
 
     @GetMapping("/profile")

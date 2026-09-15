@@ -7,11 +7,14 @@ import ProfileTerminal from '../components/user/ProfileTerminal'
 import Queue from '../components/user/Queue';
 import ProfileInfo from '../components/user/ProfileInfo';
 import { LogoutProp } from '../utils/Interfaces';
+import { useTranslation } from 'react-i18next'
+import { LanguageChange } from '../components/LanguageChange';
 
 const UserHome: React.FC<LogoutProp> = ({logout}) =>{
     type ControlOption = "clusters" | "info";
     type DisplayOption = "queue" | "terminal" | "info" | null;
 
+    const { t } = useTranslation();
         const [selectedControlOption, setSelectedControlOption] = useState<ControlOption>();
         const [selectedCluster, setSelectedCluster] = useState<ClusterUserResponse | null>(null);
         const [selectedBindedCluster, setSelectedBindedCluster] = useState<BindedClusterResponse | null>(null);
@@ -39,7 +42,7 @@ const UserHome: React.FC<LogoutProp> = ({logout}) =>{
 
     const renderDisplayOption = () => {
         if (!selectedCluster || !selectedBindedCluster) {
-            alert('Не выбран кластер!');
+            alert(t('cluster.notChoose'));
             return;
         }
         switch (selectedDisplayOption) {
@@ -70,12 +73,13 @@ const UserHome: React.FC<LogoutProp> = ({logout}) =>{
                     <label className='custom-radio' htmlFor='clusters'>
                         <input type="radio" name='controlOption' onChange={() => handleControlOptionChange('clusters')} />
                         <span id="cluster-img"></span>
-                        Кластеры
+                        {t("menu.clusters")}
                     </label>
                 </div>
                 <div id='control-panel-lower'>
+                    <LanguageChange />
                     <button id='logout-button' onClick={logout}>
-                        <span className='button-text'>Выход</span>
+                        <span className='button-text'>{t("menu.exit")}</span>
                     </button>
                 </div>
             </div>
@@ -90,17 +94,17 @@ const UserHome: React.FC<LogoutProp> = ({logout}) =>{
                                     <label className='tab-custom-radio'>
                                         <input type="radio" name='displayOption' onChange={() => handleDisplayOptionChange('queue')} />
                                         <span id="queue-img"></span>
-                                        Очередь
+                                        {t("menu.queue")}
                                     </label>
                                     <label className='tab-custom-radio'>
                                         <input type="radio" name='displayOption' onChange={() => handleDisplayOptionChange('terminal')} />
                                         <span id="clutser-terminal-img"></span>
-                                        Терминал
+                                        {t("menu.terminal")}
                                     </label>
                                     <label className='tab-custom-radio'>
                                         <input type="radio" name='displayOption' onChange={() => handleDisplayOptionChange('info')} />
                                         <span id="clutser-terminal-img"></span>
-                                        Информация о профиле
+                                        {t("user.infoProfile")}
                                     </label>
                                 </div>
                                 <div id="control-tabs-option-render-container">

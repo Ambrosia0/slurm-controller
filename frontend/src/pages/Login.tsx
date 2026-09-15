@@ -1,41 +1,77 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import '../styles/login.css'
+import '../styles/users.css'
+import { useTranslation } from 'react-i18next'
 
 type LoginProps = {
     loginMethod: (username: string, password: string) => Promise<void>;
 };
 
 const Login: React.FC<LoginProps> = ({loginMethod}) => {
+    const { t } = useTranslation();
     const formRef = useRef<HTMLFormElement>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
 
-    const handleLogin = async () => {
-        if (!formRef.current) {
-            return;
-        }
-        const form = formRef.current;
+    const handleLogin = async (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
         try {
-            if(form.checkValidity()){
-                const formData = new FormData(form);
-                loginMethod(
-                    formData.get('username') as string, 
-                    formData.get('password') as string);
-            }else{
-                form.reportValidity();
-            }
+            const formData = new FormData(event.currentTarget);
+            const username = formData.get('username')?.toString().trim();
+            const password = formData.get('password')?.toString();
+            if(!username || !password)
+                return;
+            setIsError(false);
+            setIsLoading(true);
+            await loginMethod(username, password);
         } catch (error) {
-            alert('Неверный логин или пароль!');
+            setIsError(true);
             console.error('Login error', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div id='login-container'>
-            <form ref={formRef} id='form' onSubmit={(e) => e.preventDefault()}>
-                <h1 className='entry-title'>Login</h1>
-                <input className='login-input' title='Username' name='username' type="text" placeholder='Username...' required />
-                <input className='login-input' title='Password' name='password' type="password" placeholder='Password...' required />
+            <form 
+                ref={formRef} 
+                id='form'
+                onSubmit={handleLogin}
+            >
+                <h1 className='entry-title'>{t('login.title')}</h1>
+                <input 
+                    className={isError? 'login-input error-input': 'login-input'} 
+                    title={t('login.username')} 
+                    name='username' 
+                    type="text"
+                    autoComplete='username' 
+                    placeholder={t('login.usernamePlaceholder')} 
+                    required 
+                />
+                <input 
+                    className={isError? 'login-input error-input': 'login-input'} 
+                    title={t('login.password')} 
+                    name='password' 
+                    type="password" 
+                    autoComplete='current-password'
+                    placeholder={t('login.passwordPlaceholder')} 
+                    required 
+                />
+                {isError &&
+                    <div>
+                        <div className='login-error' role='alert'>
+                            {t('login.invalidCredentials')}
+                        </div>
+                    </div>
+                }
                 <div id='button-container'>
-                    <button id='login-button' onClick={() => handleLogin()}>Войти</button>
+                    <button id='login-button' 
+                        type='submit'
+                        disabled={isLoading}
+                    >
+                        {isLoading? <span className='loading-progress'/>: t('login.button')}
+                    </button>
                 </div>
             </form>
         </div>

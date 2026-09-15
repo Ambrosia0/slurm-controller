@@ -154,7 +154,11 @@ public class SlurmSchedulerHandlerImpl implements SchedulerHandler{
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .onStatus(HttpStatusCode::isError, (request, response) -> {
-                log.error("Can't get tres on {}:{}!", cluster.getHost(), cluster.getUsername());
+                var errors = new String(response.getBody().readAllBytes());
+                if(errors.contains("authentication error")){
+                    slurmTokenManager.getTokenForced(cluster);
+                }
+                log.error("Can't get tres on {}:{}! error:{}", cluster.getHost(), cluster.getUsername(), errors);
                 throw new ClusterUnavailableException();
             })
             .body(SlurmTresResponse.class);
@@ -375,7 +379,7 @@ public class SlurmSchedulerHandlerImpl implements SchedulerHandler{
                             null)
                         .job(taskRequest.job() != null? 
                             slurmJobSubmitMapper.toJobSubmit(
-                                abstractPolicy.getUsername(), 
+                                abstractPolicy.getUsername(),
                                 taskRequest.job()
                             ):
                             null
@@ -383,7 +387,11 @@ public class SlurmSchedulerHandlerImpl implements SchedulerHandler{
                         .jobs(taskRequest.jobs() != null?
                             taskRequest.jobs().stream()
                                 .map(t -> slurmJobSubmitMapper
-                                    .toJobSubmit(abstractPolicy.getUsername(), t))
+                                    .toJobSubmit(
+                                        abstractPolicy.getUsername(), 
+                                        t
+                                    )
+                                )
                                 .toList():
                             null
                         )
@@ -431,4 +439,5 @@ public class SlurmSchedulerHandlerImpl implements SchedulerHandler{
         }
         return token;
     }
+
 }

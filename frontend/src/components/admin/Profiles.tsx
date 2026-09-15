@@ -21,7 +21,8 @@ import { formatSecondsToHMS } from "../../utils/functions";
 import { PageMetadata, Sort } from "../../api/admin/Interfaces";
 import { getGroups, GroupAdminResponse } from "../../api/admin/groups";
 import { SlurmClusterRec } from "../../api/admin/clusters";
-import { NON_LIMITABLE_TRES } from "../../utils/Interfaces";
+import { useTranslation } from 'react-i18next'
+import { NON_LIMITABLE_TRES } from "../../utils/utils";
 
 interface ProfileTableProp {
     group: GroupAdminResponse;
@@ -34,6 +35,7 @@ type ProfileProps = {
 }
 
 const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
+    const { t } = useTranslation();
     type DisplayMode = "groups" | "profiles"
 
     const [pageProfiles, setPageProfiles] = useState<ClusterProfileResponse[]>([]);
@@ -97,7 +99,7 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
             setTableGroups(prepared);
         } catch (error) {
             console.log("Error!", error);
-            alert('Ошибка!');
+            alert(t('profiles.error'));
         } finally {
             setIsBusy(false);
         }
@@ -122,10 +124,10 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                 }
             );
             setPageProfiles(data.content);
-            setPageMetadata(data.pageable);
+            setPageMetadata({...data});
         } catch (error) {
             console.log("Error!", error);
-            alert('Ошибка!');
+            alert(t('profiles.error'));
         } finally {
             setIsBusy(false);
         }
@@ -150,7 +152,7 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                 item.group.id === groupId ? { ...item, profiles: data.content } : item
             ));
         } catch (error) {
-            alert('Ошибка!');
+            alert(t('profiles.error'));
             console.log("Error!", error);
         } finally {
             setIsBusy(false);
@@ -158,7 +160,7 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
     }
 
     const deleteProfile = async (profile: ClusterProfileResponse) => {
-        const confirmed = window.confirm(`Удалить профиль ${profile.user.username}?`)
+        const confirmed = window.confirm(`${t('profilesAdmin.deleteConfirm')} ${profile.user.username}?`)
         if (confirmed) {
             if (isBusy)
                 return;
@@ -197,7 +199,7 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                     setPageMetadata(data.pageable);
                 }
             } catch (error) {
-                alert('Ошибка!');
+                alert(t('profilesAdmin.download'));
                 console.log("Error!", error);
             } finally {
                 setIsBusy(false);
@@ -212,7 +214,7 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
         try {
             await apiDownloadProfile(clusterId, bindedCluster.name, profile.user.id);
         } catch (error) {
-            alert('Ошибка!');
+            alert(t('profiles.error'));
             console.log("Error!", error);
         } finally {
             setIsBusy(false);
@@ -237,7 +239,7 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
             const userIds = data.content.map(p => p.user.id);
             await downloadMultipleProfiles(clusterId, bindedCluster.name, userIds);
         } catch (error) {
-            alert('Ошибка!');
+            alert(t('profiles.error'));
             console.log("Error!", error);
         } finally {
             setIsBusy(false);
@@ -266,43 +268,50 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
     };
 
     const renderPageNumbers = () => {
-        const pages = [];
         const { number: currentPage, totalPages } = pageMetadata;
 
-        const createPageButton = (page: number) => renderPageButton(page);
-
-        const addEllipsis = (key: string) =>
-            pages.push(<span key={key} style={{ padding: '0 5px' }}>...</span>);
-
-        pages.push(createPageButton(0));
-
-        if (currentPage > 2) {
-            pages.push(createPageButton(1));
+        if (totalPages <= 1) {
+            return renderPageButton(0);
         }
 
-        if (currentPage > 3) {
-            addEllipsis('left-dots');
-        }
+        const pages = new Set<number>();
+        pages.add(0);
+        pages.add(totalPages - 1);
 
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-            if (i > 1 && i < totalPages - 1) {
-                pages.push(createPageButton(i));
+        for (
+            let page = currentPage - 1;
+            page <= currentPage + 1;
+            page++
+        ) {
+            if (page >= 0 && page < totalPages) {
+                pages.add(page);
             }
         }
-
-        if (currentPage < totalPages - 4) {
-            addEllipsis('right-dots');
+        if (currentPage > 2) {
+            pages.add(1);
         }
 
-        if (currentPage < totalPages - 2) {
-            pages.push(createPageButton(totalPages - 2));
+        if (currentPage < totalPages - 3) {
+            pages.add(totalPages - 2);
         }
 
-        if (totalPages > 1) {
-            pages.push(createPageButton(totalPages - 1));
-        }
+        const sortedPages = [...pages].sort((a, b) => a - b);
 
-        return pages;
+        const result: React.ReactNode[] = [];
+
+        sortedPages.forEach((page, index) => {
+            if (index > 0 && page - sortedPages[index - 1] > 1) {
+                result.push(
+                    <span key={`dots-${page}`} style={{ padding: '0 5px' }}>
+                        ...
+                    </span>
+                );
+            }
+
+            result.push(renderPageButton(page));
+        });
+
+        return result;
     };
 
     const renderPageButton = (pageIndex: number) => (
@@ -384,8 +393,8 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                 <td>{profile.hardLimit + 'MB'}</td>
                 <td>{formatSecondsToHMS(profile.maxTaskLiveTime)}</td>
                 <td>
-                    <button onClick={() => deleteProfile(profile)}>Удалить</button>
-                    <button onClick={() => downloadProfile(profile)}>Загрузить</button>
+                    <button onClick={() => deleteProfile(profile)}>{t('profilesAdmin.remove')}</button>
+                    <button onClick={() => downloadProfile(profile)}>{t('profilesAdmin.download')}</button>
                 </td>
             </tr>
         );
@@ -396,9 +405,9 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
             <MovingPanel isOpen={dynamicPanel} onClose={() => setDynamicPanel(dynamicPanel ? false : true)}>
                 <div className="dynamic-panel-tab">
 
-                    <button onClick={() => { setActiveForm('createProfile'); setIsFormOpen(true) }}>Предоставление доступа пользователям</button>
-                    <button onClick={() => { setActiveForm('provideGroupAccess'); setIsFormOpen(true) }}>Предоставление доступа группе пользователей</button>
-                    <button onClick={() => { setActiveForm('revokeAccessFromGroup'); setIsFormOpen(true) }}>Аннулирование доступа группе</button>
+                    <button onClick={() => { setActiveForm('createProfile'); setIsFormOpen(true) }}>{t('profilesAdmin.grantAccess')}</button>
+                    <button onClick={() => { setActiveForm('provideGroupAccess'); setIsFormOpen(true) }}>{t('profilesAdmin.grantGroupAccess')}</button>
+                    <button onClick={() => { setActiveForm('revokeAccessFromGroup'); setIsFormOpen(true) }}>{t('profilesAdmin.revokeGroupAccess')}</button>
                 </div>
                 <div className="dynamic-panel-tab-content">
                     {activeForm === 'revokeAccessFromGroup' && <RevokeGroupProfile isBusy={isBusy} setIsBusy={setIsBusy} bindedCluster={bindedCluster} clusterId={clusterId} onSuccessCall={() => rerenderCurrentPage()} isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />}
@@ -409,11 +418,11 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
             <div id="profiles-container-display-mode">
                 <label htmlFor="groups">
                     <input type="radio" name="displayMode" onChange={() => renderDisplayOption("groups")} />
-                    Группы
+                    {t('profilesAdmin.groups')}
                 </label>
                 <label htmlFor="profiles">
                     <input type="radio" name="displayMode" onChange={() => renderDisplayOption("profiles")} />
-                    Профили
+                    {t('profilesAdmin.profiles')}
                 </label>
             </div>
             <div id="profiles-option-render-container">
@@ -422,39 +431,29 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                         <div className="drop-table-groups" onClick={() => toggleGroup(item.group.id)}>
                             {item.group.name} {openGroups.includes(item.group.id) ? '▲' : '▼'}
                             <div>
-                                <button onClick={() => downloadGroup(item.group)}>Загрузить</button>
+                                <button onClick={() => downloadGroup(item.group)}>{t('profilesAdmin.download')}</button>
                             </div>
                         </div>
                         {openGroups.includes(item.group.id) && (
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        {/* <th onClick={() => handleSort('id.user.id', item.group.id)}>Id пользователя
-                                            {sortField === 'id.user.id' && (sortDirection === 'asc' ? '↑' : '↓')}</th>
-                                        <th onClick={() => handleSort('id.user.username', item.group.id)}>Имя пользователя
-                                            {sortField === 'id.user.username' && (sortDirection === 'asc' ? '↑' : '↓')}</th>
-                                        <th onClick={() => handleSort('username', item.group.id)}>Имя профиля
-                                            {sortField === 'username' && (sortDirection === 'asc' ? '↑' : '↓')}</th>
-                                        <th onClick={() => handleSort('password', item.group.id)}>Пароль
-                                            {sortField === 'password' && (sortDirection === 'asc' ? '↑' : '↓')}</th>
-                                        <th onClick={() => handleSort('createdAt', item.group.id)}>Время создания
-                                            {sortField === 'createdAt' && (sortDirection === 'asc' ? '↑' : '↓')}</th> */}
                                         <th>№</th>
-                                        <th>Id</th>
-                                        <th>Пользователь</th>
-                                        <th>Время создания</th>
-                                        <th>Макс. в очереди</th>
-                                        <th>Макс. выполн.</th>
+                                        <th>{t('profilesAdmin.id')}</th>
+                                        <th>{t('profiles.user')}</th>
+                                        <th>{t('profilesAdmin.createdAt')}</th>
+                                        <th>{t('profiles.maxQueue')}</th>
+                                        <th>{t('profiles.maxRun')}</th>
                                         <th>TRES</th>
                                         <th>Soft</th>
                                         <th>Hard</th>
                                         <th>TTL</th>
-                                        <th>Действ.</th>
+                                        <th>{t('profilesAdmin.validity')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {item.profiles.length === 0 ?
-                                        (<tr><td>Профили не созданы...</td></tr>) :
+                                        (<tr><td>{t('profilesAdmin.profilesNotCreated')}</td></tr>) :
                                         item.profiles.map((profile, index) => (
                                             renderProfile(index, profile)
                                         ))
@@ -466,27 +465,27 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                 ))}
                 {displayOption === "profiles" && <>
                     <div className="table-option-container">
-                        <div className="table-container">
-                            {pageProfiles.length === 0 ? (<h2>Профили не созданы...</h2>) : <>
+                             <div className="table-container">
+                            {pageProfiles.length === 0 ? (<h2>{t('profiles.notCreated')}</h2>) : <>
                                 <table className="table">
                                     <thead>
                                         <tr>
                                             <th>№</th>
                                             <th onClick={() => handleSort('id.user.id')}>Id
                                                 {sortField === 'id.user.id' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('id.user.username')}>Пользователь
+                                            <th onClick={() => handleSort('id.user.username')}>{t('profiles.user')}
                                                 {sortField === 'id.user.username' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('id.user.group.name')}>Группа
+                                            <th onClick={() => handleSort('id.user.group.name')}>{t('profiles.group')}
                                                 {sortField === 'id.user.group.name' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th onClick={() => handleSort('createdAt')}>Создан
+                                            <th onClick={() => handleSort('createdAt')}>{t('profiles.created')}
                                                 {sortField === 'createdAt' && (sortDirection === 'ASC' ? '↑' : '↓')}</th>
-                                            <th>Макс. в очереди</th>
-                                            <th>Макс. выполн.</th>
+                                            <th>{t('profiles.maxQueue')}</th>
+                                            <th>{t('profiles.maxRun')}</th>
                                             <th>TRES</th>
                                             <th>Soft</th>
                                             <th>Hard</th>
                                             <th>TTL</th>
-                                            <th>Действ.</th>
+                                            <th>{t('profiles.validity')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -499,16 +498,16 @@ const Profiles: React.FC<ProfileProps> = ({ bindedCluster, clusterId }) => {
                         </div>
                         <div className="pagination">
                             <button className="prev-button" onClick={() => handlePageChange(pageMetadata.number - 1)} disabled={pageMetadata.number === 0}>
-                                Назад
+                                {t('common.back')}
                             </button>
 
                             {renderPageNumbers()}
 
                             <button className="next-button" onClick={() => handlePageChange(pageMetadata.number + 1)} disabled={pageMetadata.number === pageMetadata.totalPages}>
-                                Вперед
+                                {t('common.next')}
                             </button>
 
-                            <select title="Количество отображаемых профилей" value={pageMetadata.size} onChange={handlePageSizeChange}>
+                            <select title={t('profiles.selectTitle')} value={pageMetadata.size} onChange={handlePageSizeChange}>
                                 <option value={20}>20</option>
                                 <option value={30}>30</option>
                                 <option value={50}>50</option>

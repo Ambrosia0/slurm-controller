@@ -4,19 +4,17 @@ import java.util.List;
 
 import com.ambrosia.cluster_controller.util.TresUtils;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 
 @Builder 
 public record JobRequest(
     List<String> args,
 
-    @Pattern (regexp = "^#!/bin/bash\\\\n.+", message = "Script must start with #!/bin/bash")
+    @Pattern (regexp = "^#!/bin/bash\\R.+", message = "Script must start with #!/bin/bash")
     String script,
 
-    @NotNull 
     @Pattern(regexp = "^\\/([a-zA-Z0-9._-]+\\/)*[a-zA-Z0-9._-]+\\/?$", message = "Path must match with unix-system paths")
     String directory,
 
@@ -26,13 +24,13 @@ public record JobRequest(
 
     List<String> flags,
 
-    @Positive 
+    @PositiveOrZero 
     Long deadLine,
 
-    @Positive 
+    @PositiveOrZero 
     Long beginTime,
 
-    @Positive 
+    @PositiveOrZero 
     Long endTime,
 
     /**
@@ -63,31 +61,31 @@ public record JobRequest(
     String tresPerNode,
     
     // Integer Number of CPUs required by each task format: int32
-    @Positive 
+    @PositiveOrZero 
     Integer cpusPerTask,
 
     // Integer Minimum number of CPUs required format: int32
-    @Positive 
+    @PositiveOrZero 
     Integer minimumCpus,
 
     // Integer Maximum number of CPUs required format: int32
-    @Positive 
+    @PositiveOrZero 
     Integer maximumCpus,
 
     // String Node count range specification (e.g. 1-15:4)
     @Pattern(regexp = "^\\d+(?:-\\d+)?(?::\\d+)?$")
     String nodes, 
 
-    @Positive
+    @PositiveOrZero
     Integer maxNodes,
 
-    @Positive
+    @PositiveOrZero
     Integer minNodes,
 
-    @Positive
+    @PositiveOrZero
     Integer numberOfTasks,
 
-    @Positive
+    @PositiveOrZero 
     Integer maxTaskLiveTime,
 
     // String Path to stderr file

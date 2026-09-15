@@ -78,12 +78,16 @@ export const createGroup = async (groupName: string) => {
 
 export const groupUsers = async (groupId: number, userIds: number[]) => {
     return await apiClient.post(`/api/group/${groupId}/users`, {
-        userIds
+        params: {
+            userIds
+        }
     });
 }
 
 export const ungroupUsers = async (userIds: number[]) => {
     return await apiClient.delete('/api/group/users', {
-        data: userIds
+        params: {
+            userIds
+        }
     });
 }

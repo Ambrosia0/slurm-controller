@@ -1,1 +1,1 @@
-export const apiUrl = window.location.origin;
+export const apiUrl = import.meta.env.DEV? "http://localhost:8080": window.location.origin;

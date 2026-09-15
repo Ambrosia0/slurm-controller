@@ -6,6 +6,7 @@ import { ClusterUserResponse, getUserProfile, downloadUserProfile } from "../../
 import { formatSecondsToHMS } from "../../utils/functions";
 import { SlurmClusterRec } from "../../api/admin/clusters";
 import { ClusterProfileResponse } from "../../api/admin/profiles";
+import { useTranslation } from 'react-i18next'
 
 
 interface UserClusterProps{
@@ -14,6 +15,7 @@ interface UserClusterProps{
 }
 
 const ProfileInfo: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
+    const { t } = useTranslation();
     const [profileData, setProfileData] = useState<ClusterProfileResponse>();
     const [isBusy, setIsBusy] = useState<boolean>(false);
 
@@ -49,7 +51,7 @@ const ProfileInfo: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
         try {
             await downloadUserProfile(cluster.id, bindedCluster.name);
         } catch (error) {
-            alert('Ошибка скачивания профиля');
+            alert('Ошибка загрузки профиля');
             console.log("Error!", error);
         } finally {
             setIsBusy(false);
@@ -66,37 +68,37 @@ const ProfileInfo: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
     return (
         <div id="statistics-node-container">
             {profileData ? <>
-                <h2>Информация о профиле</h2>
+                <h2>{t('profileInfo.profileInfo')}</h2>
                 <ul className="list">
                     <li className="list-item">
-                        <span>Имя профиля:</span>
+                        <span>{t('profileInfo.profileName')}</span>
                         <span>{profileData.user.username}</span>
                     </li>
                     <li className="list-item">
-                        <span>Группа:</span>
+                        <span>{t('profileInfo.group')}</span>
                         <span>{profileData.user.group?.name ?? '-'}</span>
                     </li>
                     <li className="list-item">
-                        <span>Создан:</span>
+                        <span>{t('profileInfo.created')}</span>
                         <span>{new Date(profileData.createdAt).toLocaleString()}</span>
                     </li>
                 </ul>
 
-                <h2>Ограничения</h2>
+                <h2>{t('profileInfo.limitations')}</h2>
                 <ul className="list">
                     <li className="list-item">
-                        <span>Макс. задач в очереди:</span>
+                        <span>{t('profileInfo.maxQueue')}</span>
                         <span>{profileData.maxSubmit}</span>
                     </li>
                     <li className="list-item">
-                        <span>Макс. выполняемых задач:</span>
+                        <span>{t('profileInfo.maxRunning')}</span>
                         <span>{profileData.maxJobs}</span>
                     </li>
                     <li className="list-item">
-                        <span>TRES:</span>
+                        <span>{t('profileInfo.tres')}</span>
                         <ul className="tres-list">
                             {tresEntries.length === 0 ? (
-                                <li className="list-item">Нет ограничений</li>
+                                <li className="list-item">{t('profileInfo.noLimitations')}</li>
                             ) : (
                                 tresEntries.map(([key, value]) => (
                                     <li key={key} className="list-item">
@@ -108,20 +110,20 @@ const ProfileInfo: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
                         </ul>
                     </li>
                     <li className="list-item">
-                        <span>Время выполнения задачи:</span>
+                        <span>{t('profileInfo.taskTime')}</span>
                         <span>{formatSecondsToHMS(profileData.maxTaskLiveTime)}</span>
                     </li>
                     <li className="list-item">
-                        <span>Мягкий лимит (дисковое пространство):</span>
+                        <span>{t('profileInfo.softLimit')}</span>
                         <span>{profileData.softLimit} MB</span>
                     </li>
                     <li className="list-item">
-                        <span>Жёсткий лимит (дисковое пространство):</span>
+                        <span>{t('profileInfo.hardLimit')}</span>
                         <span>{profileData.hardLimit} MB</span>
                     </li>
                 </ul>
-            </> : isBusy ? <h2>Загрузка...</h2> : <h2>Профиль не найден</h2>}
-            <button onClick={() => downloadProfile()}>Скачать профиль</button>
+            </> : isBusy ? <h2>{t('profileInfo.loading')}</h2> : <h2>{t('profileInfo.notFound')}</h2>}
+            <button onClick={() => downloadProfile()}>{t('profileInfo.download')}</button>
         </div>
     );
 }

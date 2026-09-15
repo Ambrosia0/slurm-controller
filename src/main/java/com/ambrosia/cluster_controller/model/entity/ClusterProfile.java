@@ -32,27 +32,27 @@ public class ClusterProfile {
 
     @Builder.Default
     @Column(name = "max_submit")
-    private Integer maxSubmit = 2;
+    private Integer maxSubmit = 0;
 
     @Builder.Default
     @Column(name = "max_tasks")
-    private Integer maxTasks = 1;
+    private Integer maxTasks = 0;
 
     @Builder.Default
     @Column(name = "max_tres")
-    private List<String> maxTres = List.of("cpu=1","mem=128","node=1");
+    private List<String> maxTres = List.of();
 
     @Builder.Default
     @Column(name = "max_task_ttl")
-    private Integer maxTaskTtl = 1024;
+    private Integer maxTaskTtl = 0;
 
     @Builder.Default
     @Column(name = "soft_limit")
-    private Long softLimit = 1024L;
+    private Long softLimit = 0L;
 
     @Builder.Default
     @Column(name = "hard_limit")
-    private Long hardLimit = 2048L;
+    private Long hardLimit = 0L;
 
     @Column(name = "created_at", insertable = false)
     private Instant createdAt;

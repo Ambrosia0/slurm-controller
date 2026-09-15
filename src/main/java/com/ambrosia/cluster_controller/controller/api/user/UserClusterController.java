@@ -21,7 +21,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cluster")
-@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class UserClusterController {
     private final ClusterUserService clusterUserService;
 
@@ -50,7 +48,7 @@ public class UserClusterController {
         return clusterUserService.getBindedClusters(clusterId, userDetails.getId());
     }
 
-    @GetMapping("/{clusterId}/bound/{clusterName}/tres")
+    @GetMapping("/{clusterId}/tres")
     public List<SlurmTres> getTres(
             @PathVariable Long clusterId) {
         return clusterUserService.getTres(clusterId);

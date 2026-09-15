@@ -36,6 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
-src/main/resources/keystore.p12
-testCluster*.zip
+*dev*
+*.zip
 logs
+src/main/resources/static/

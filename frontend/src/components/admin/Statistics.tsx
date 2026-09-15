@@ -6,6 +6,7 @@ import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContai
 import { apiUrl } from '../../utils/config';
 import CustomTooltip from "../../utils/CustomTooltip";
 import { Statistics } from "../../utils/Interfaces";
+import { useTranslation } from 'react-i18next'
 
 type StatisticsProps = {
     clusterId: number;
@@ -13,6 +14,7 @@ type StatisticsProps = {
 }
 
 const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster }) => {
+    const { t } = useTranslation();
     const [statistics, setStatistics] = useState<Statistics[]>([]);
     const [selectedTab, setSelectedTab] = useState('cluster');
 
@@ -27,8 +29,8 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
     useEffect(() => {
         const socket = new WebSocket(`${apiUrl}/api/ws/admin/statistics?clusterId=${clusterId}&clusterName=${bindedCluster}`);
 
-        socket.onopen = () => {
-            console.log('Getting statistics');
+         socket.onopen = () => {
+            console.log(t('statistics.getting'));
         }
 
         socket.onmessage = (event: MessageEvent) => {
@@ -40,7 +42,7 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
         }
 
         socket.onerror = (error) => {
-            console.error('Ошибка, не удается установить соединение через WebSocket: ', error);
+            console.error(t('statistics.websocketError'), error);
         }
 
         return () => {
@@ -53,13 +55,13 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
     useEffect(() =>{
         if (statistics.length === 0) return;
         console.log(statistics);
-        setData([
-            { name: 'Выполнено', value: statistics[statistics.length - 1].jobsCompleted },
-            { name: 'Провалено', value: statistics[statistics.length - 1].jobsFailed },
-            { name: 'Отменено', value: statistics[statistics.length - 1].jobsCancelled },
-            { name: 'Выполняется', value: statistics[statistics.length - 1].jobsRunning },
-            { name: 'Начато', value: statistics[statistics.length - 1].jobsStarted },
-            { name: 'Всего', value: statistics[statistics.length - 1].jobsSubmitted },
+         setData([
+            { name: t('statistics.completed'), value: statistics[statistics.length - 1].jobsCompleted },
+            { name: t('statistics.failed'), value: statistics[statistics.length - 1].jobsFailed },
+            { name: t('statistics.cancelled'), value: statistics[statistics.length - 1].jobsCancelled },
+            { name: t('statistics.running'), value: statistics[statistics.length - 1].jobsRunning },
+            { name: t('statistics.started'), value: statistics[statistics.length - 1].jobsStarted },
+            { name: t('statistics.total'), value: statistics[statistics.length - 1].jobsSubmitted },
         ]);
     },[statistics])
     
@@ -67,11 +69,11 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
         <div id="statistics-container">
             {statistics.length !== 0 && <>
                 <div className="tabs">
-                    <button
+              <button
                         className={selectedTab === 'cluster' ? 'active' : ''}
                         onClick={() => setSelectedTab('cluster')}
                     >
-                        Статистика по кластеру
+                        {t('statistics.clusterTitle')}
                     </button>
                     {statistics[statistics.length - 1].nodes.map(node => (
                         <button
@@ -84,9 +86,9 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
                     ))}
                 </div>
 
-                {selectedTab === 'cluster' ? (
+                 {selectedTab === 'cluster' ? (
                     <div id="statistics-cluster-container">
-                        <h2>Статистика по кластеру</h2>
+                        <h2>{t('statistics.clusterTitle')}</h2>
                         <PieChart width={600} height={300}>
                             <Pie
                                 data={data}
@@ -106,30 +108,30 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
                             <Legend />
                         </PieChart>
                         <div className="list-item">
-                            <span>Всего задач выполнено:</span>
+                            <span>{t('statistics.totalCompleted')}</span>
                             <span>{statistics[statistics.length - 1].jobsCompleted}</span>
                         </div>
                         <div className="list-item">
-                            <span>Всего задач провалено:</span>
+                            <span>{t('statistics.totalFailed')}</span>
                             <span>{statistics[statistics.length - 1].jobsFailed}</span>
                         </div>
                         <div className="list-item">
-                            <span>Задач выполняется:</span>
+                            <span>{t('statistics.runningTasks')}</span>
                             <span>{statistics[statistics.length - 1].jobsRunning}</span>
                         </div>
                         <div className="list-item">
-                            <span>Задач начато:</span>
+                            <span>{t('statistics.startedTasks')}</span>
                             <span>{statistics[statistics.length - 1].jobsStarted}</span>
                         </div>
                         <div className="list-item">
-                            <span>Всего задач:</span>
+                            <span>{t('statistics.totalTasks')}</span>
                             <span>{statistics[statistics.length - 1].jobsSubmitted}</span>
                         </div>
                     </div>
                 ) : (
                     (() => {
                         const node = statistics[statistics.length - 1].nodes.find(n => n.hostname === selectedTab);
-                        if (!node) return <div>Узел не найден</div>;
+                                  if (!node) return <div>{t('statistics.nodeNotFound')}</div>;
 
                         const nodeHistory = statistics.map(stat => {
                             const matchingNode = stat.nodes.find(n => n.hostname === node.hostname);
@@ -148,56 +150,56 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
 
                         return (
                             <div id="statistics-node-container" key={node.name ?? node.hostname}>
-                                <h2>Состояние узла: {node.name ?? node.hostname}</h2>
+                                <h2>{t('statistics.nodeState')}: {node.name ?? node.hostname}</h2>
                                 <ul className="list">
                                     <li className="list-item">
-                                        <span>Время запуска:</span>
+                                        <span>{t('statistics.bootTime')}</span>
                                         <span>{new Date(node.bootTime.number * 1000).toLocaleString()}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Число сокетов (физических процессоров):</span>
+                                        <span>{t('statistics.sockets')}</span>
                                         <span>{node.sockets}</span>
                                     </li>
-                                    <li className="list-item">
-                                        <span>Число логических процессоров:</span>
+                                      <li className="list-item">
+                                        <span>{t('statistics.logicalCpus')}</span>
                                         <span>{node.cpus}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Число ядер на процессор:</span>
+                                        <span>{t('statistics.coresPerCpu')}</span>
                                         <span>{node.cores}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Число потоков:</span>
+                                        <span>{t('statistics.threads')}</span>
                                         <span>{node.threads}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Ресурсы:</span>
-                                        <span>{node.gres.length > 0? node.gres: "Нет"}</span>
+                                        <span>{t('statistics.resources')}</span>
+                                        <span>{node.gres.length > 0? node.gres: t('common.no')}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Ресурсы использованы:</span>
-                                        <span>{node.gresUsed.length > 0? node.gresUsed: "Нет"}</span>
+                                        <span>{t('statistics.resourcesUsed')}</span>
+                                        <span>{node.gresUsed.length > 0? node.gresUsed: t('common.no')}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Ресурсы недоступны:</span>
+                                        <span>{t('statistics.resourcesUnavail')}</span>
                                         <span>{node.gresDrained}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Последнее использование:</span>
+                                        <span>{t('statistics.lastUsed')}</span>
                                         <span>{new Date(node.lastBusy.number * 1000).toLocaleString()}</span>
                                     </li>
                                     <li className="list-item">
-                                        <span>Состояние:</span>
+                                        <span>{t('statistics.state')}</span>
                                         <span>{node.state[node.state.length - 1]}</span>
                                     </li>
                                 </ul>
 
                                 <div className="chart-container">
-                                    <div className="chart">
-                                        <h3>Загрузка процессоров (%)</h3>
+                                  <div className="chart">
+                                        <h3>{t('statistics.cpuLoad')}</h3>
                                         <ResponsiveContainer width="100%" height={200}>
                                             <AreaChart data={nodeHistory} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
-                                                <Area type="monotone" name="Загрузка процессоров" dataKey="cpuLoad" stroke="#8884d8" fill="#8884d8" />
+                                                <Area type="monotone" name={t('statistics.cpuLoad')} dataKey="cpuLoad" stroke="#8884d8" fill="#8884d8" />
                                                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                                                 <XAxis dataKey="timestamp" />
                                                 <YAxis domain={[0, 100]} />
@@ -206,12 +208,12 @@ const StatisticsDisplay: React.FC<StatisticsProps> = ({ clusterId, bindedCluster
                                         </ResponsiveContainer>
                                     </div>
 
-                                    <div className="chart">
-                                        <h3>Загрузка памяти (МБ)</h3>
+                                   <div className="chart">
+                                        <h3>{t('statistics.memoryLoad')}</h3>
                                         <ResponsiveContainer width="100%" height={200}>
                                             <AreaChart data={nodeHistory} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
-                                                <Area type="monotone" name="Загрузка памяти" dataKey="ramLoad" stackId={1} stroke="#82ca9d" fill="#82ca9d" />
-                                                <Area type="monotone" name="Доступно памяти" dataKey="totalMemory" stackId={1} stroke="#ffc658" fill="#ffc658" />
+                                                <Area type="monotone" name={t('statistics.memoryLoad')} dataKey="ramLoad" stackId={1} stroke="#82ca9d" fill="#82ca9d" />
+                                                <Area type="monotone" name={t('statistics.memoryAvailable')} dataKey="totalMemory" stackId={1} stroke="#ffc658" fill="#ffc658" />
                                                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                                                 <XAxis dataKey="timestamp" />
                                                 <YAxis />

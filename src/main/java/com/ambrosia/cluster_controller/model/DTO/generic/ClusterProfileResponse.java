@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.ambrosia.cluster_controller.model.DTO.admin.response.UserAdminResponse;
 
+import lombok.Builder;
+
+@Builder 
 public record ClusterProfileResponse(
     long clusterId,
     UserAdminResponse user,

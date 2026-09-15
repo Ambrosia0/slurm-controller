@@ -6,11 +6,13 @@ import "../../styles/components/panelTab.css"
 import "../../styles/components/updateButton.css"
 
 import { useEffect, useState } from "react";
-import { cancelTask as apiCancelTask } from '../../api/admin/tasks';
+import { cancelTask as apiCancelTask } from '../../api/user/userApi';
 import MovingPanel from "../../utils/MovingPanel";
-import { BindedClusterResponse, ClusterUserResponse, getUserTasks } from '../../api/user/userApi'
-import { SlurmJob, isStatusUnCancellable, statuses, TaskStatus } from '../../utils/Interfaces'
+import { BindedClusterResponse, ClusterUserResponse, getUserTasks, pollTasks, TaskFilter } from '../../api/user/userApi'
+import { SlurmJob, statuses, TaskStatus } from '../../utils/Interfaces'
 import TaskCreationForm from '../forms/TaskCreationForm'
+import { useTranslation } from 'react-i18next'
+import { isStatusUnCancellable, mapPollJobToSlurmJob } from '../../utils/utils'
 
 interface UserClusterProps{
     cluster: ClusterUserResponse;
@@ -31,24 +33,32 @@ const Queue: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
     const [startTime, setStartTime] = useState<number | null>(Math.floor(Date.now() / 1000) - 24 * 60 * 60);
     const [endTime, setEndTime] = useState<number | null>(null);
 
+    const [taskFilter, setTaskFilter] = useState<TaskFilter>({
+        clusterNames: [bindedCluster.name],
+        startTime: Math.floor(Date.now() / 1000) - 24 * 60 * 60
+    })
+
+    const { t } = useTranslation();
 
     const fetchTasks = async() =>{
         if(isBusy)
             return;
         setIsBusy(true);
         try {
-            const data = await getUserTasks(
-                cluster.id, 
-                {
-                    taskStatus: sortOption ? [sortOption] : null,
-                    startTime,
-                    endTime,
-                    clusterNames: [bindedCluster.name]
-                }
-            );
-            setTasks(data);
+            const [staticTasks, pollJobs] = await Promise.allSettled([
+                        getUserTasks(cluster.id, taskFilter),
+                        pollTasks(cluster.id, bindedCluster.name)
+                    ]);
+            const baseTasks: SlurmJob[] = staticTasks.status === 'fulfilled' ? staticTasks.value : [];
+            const pollTaskList: SlurmJob[] = pollJobs.status === 'fulfilled' ? pollJobs.value.map(mapPollJobToSlurmJob) : [];
+            const combined = [...baseTasks, ...pollTaskList];
+            const uniqueMap = new Map<number, SlurmJob>();
+            for (const task of combined) {
+                uniqueMap.set(task.id, task);
+            }
+            setTasks(Array.from(uniqueMap.values()));
         } catch (error) {
-            alert('Error!');
+            alert(t('queue.error'));
             console.log('Error!', error);
         } finally{
             setIsBusy(false);
@@ -60,9 +70,18 @@ const Queue: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
         setIsBusy(true);
         try {
             await apiCancelTask(cluster.id, bindedCluster.name, taskId);
-            await fetchTasks();
+            setTasks(prev => prev.map(task => 
+                task.id === taskId?{
+                    ...task,
+                    jobState: {
+                        ...task.jobState,
+                        current: [...task.jobState.current, "CANCELLED"]
+                    }
+                }:
+                task
+            ));
         } catch (error) {
-            alert('Error!');
+            alert(t('queue.error'));
             console.log('Error!', error);
         } finally{
             setIsBusy(false);
@@ -114,7 +133,7 @@ const Queue: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
         <div id='queue-container'>
             <MovingPanel isOpen={dynamicPanel} onClose={() => setDynamicPanel(dynamicPanel ? false : true)}>
                 <div className="dynamic-panel-tab">
-                    <button onClick={() => { setActiveForm('taskCreation'); setIsFormOpen(true) }}>Создать задачу</button>
+                    <button onClick={() => { setActiveForm('taskCreation'); setIsFormOpen(true) }}>{t('queue.createTask')}</button>
                 </div>
 
                 <div className="dynamic-panel-tab-content">
@@ -129,7 +148,7 @@ const Queue: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
                             value={sortOption ?? ""}
                             onChange={(e) => setSortOption((e.target.value === "" ? null : e.target.value) as TaskStatus | null)}
                             className="custom-select">
-                            <option value="">Все</option>
+                            <option value="">{t('queue.all')}</option>
                             {statuses.map((stat, index) => (
                                 <option key={index} value={stat}>{stat}</option>
                             ))}
@@ -137,45 +156,49 @@ const Queue: React.FC<UserClusterProps> = ({cluster, bindedCluster}) =>{
                         <span className="select-arrow">▼</span>
                     </label>
                     <label className="select-label">
-                        Даты поиска
+                        {t('queue.searchDates')}
                         <input type='datetime-local' value={startTime !== null ? toDateTimeLocal(startTime): ''} onChange={handleStartChange} />
                         <input type='datetime-local' value={endTime !== null ? toDateTimeLocal(endTime) : ''} onChange={handleEndChange} />
                         <button className='update-button' type='button' onClick={(e) => {fetchTasks()}}></button>
                     </label>
                 </div>
                 <div className='table-container'>
-                    {isBusy? <h2>Загрузка задач...</h2> : (tasks.length !== 0)? <>
+                    {isBusy? <h2>{t('queue.loading')}</h2> : (tasks.length !== 0)? <>
                         <table className='table'>
                             <thead>
                                 <tr>
                                     <th>№</th>
-                                    <th>ID задачи</th>
-                                    <th>Имя пользователя</th>
-                                    <th>ID пользователя</th>
-                                    <th>Статус</th>
-                                    <th>Дата/время создания</th>
-                                    <th>Директория</th>
-                                    <th>Действие</th>
+                                    <th>{t('queue.taskId')}</th>
+                                    <th>{t('queue.username')}</th>
+                                    <th>{t('queue.status')}</th>
+                                    <th>{t('queue.createdDate')}</th>
+                                    <th>{t('queue.endDate')}</th>
+                                    <th>{t('queue.directory')}</th>
+                                    <th>{t('queue.action')}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {tasks.map((task, index) => (
-                                    <tr key={index}>
+                                {tasks.map((task, index) => {
+                                    const current = task.jobState?.current ?? [];
+                                    const lastStatus = current.length > 0? current[current.length - 1]: null;
+                                    return(
+                                        <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{task.id}</td>
                                         <td>{task.user}</td>
-                                        <td>{task.association?.id ?? '-'}</td>
-                                        <td>{task.jobState.current}</td>
-                                        <td>{task.time?.start ? new Date(task.time.start * 1000).toLocaleString() : '-'}</td>
+                                        <td>{lastStatus ?? "-"}</td>
+                                        <td>{task.time?.submission ? new Date(task.time.submission * 1000).toLocaleString() : '-'}</td>
+                                        <td>{task.time?.end ? new Date(task.time.end * 1000).toLocaleString() : '-'}</td>
                                         <td>{task.workingDirectory}</td>
                                         <td>
-                                            {!isStatusUnCancellable(task.jobState.current[task.jobState.current.length-1]) && <button onClick={() => cancelTask(task.id)}>Отменить</button>}
+                                            {lastStatus && !isStatusUnCancellable(lastStatus) && <button onClick={() => cancelTask(task.id)}>{t('queue.cancel')}</button>}
                                         </td>
                                     </tr>
-                                ))}
+                                    )
+                                })}
                             </tbody>
                         </table>
-                        </> : <h2>Задач нету...</h2>
+                        </> : <h2>{t('queue.noTasks')}</h2>
                     }
                 </div>
             </div>

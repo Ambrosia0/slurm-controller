@@ -42,7 +42,7 @@ sacct
 To interact with the Slurm REST API, you can use the following commands:
 
 ```bash
-unset SLURM_JWT; export $(scontrol token) | echo "$SLURM_JWT"
+unset SLURM_JWT; export $(scontrol token) echo "$SLURM_JWT"
 # In progress jobs
 wget --header="X-SLURM-USER-TOKEN:${SLURM_JWT}" -q -S -O - http://localhost:6820/slurm/v0.0.40/jobs
 # Completed jobs

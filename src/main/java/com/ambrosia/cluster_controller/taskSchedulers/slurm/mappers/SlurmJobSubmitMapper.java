@@ -23,9 +23,8 @@ public class SlurmJobSubmitMapper {
     public SlurmJobSubmit toJobSubmit(String username, JobRequest taskRequest){
         var time = Instant.now();
 
-        return SlurmJobSubmit.builder()
+        var builder = SlurmJobSubmit.builder()
             .account(appConfigurationProperties.getAccount())
-            .userName(username)
             .argv(taskRequest.args())
             .environment(List.of("PATH=/bin/:/usr/bin/:/sbin/:/usr/local/bin"))
             .script(taskRequest.script() == null? null: taskRequest.script()) // script().replace("\n", "\\n")
@@ -68,8 +67,8 @@ public class SlurmJobSubmitMapper {
             )
             .standardError(taskRequest.standardError())
             .standardInput(taskRequest.standartInput())
-            .standardOutput(taskRequest.standardOutput())
-            .build();
+            .standardOutput(taskRequest.standardOutput());
+        return builder.build();
     }
 
     public JobSubmitResponse toResponse(SlurmJobSubmitResponse slurmJobSubmitResponse){

@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.client.RestClient;
 
 import com.ambrosia.cluster_controller.config.AppConfigurationProperties;
+import com.ambrosia.cluster_controller.config.security.tokenManager.JwtManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,12 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final AuthenticationFilter authenticationFilter;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(
+                HttpSecurity httpSecurity, 
+                JwtManager jwtManager, 
+                CustomUserDetailsService customUserDetailsService) throws Exception{
+        var filter = new AuthenticationFilter(jwtManager, customUserDetailsService);
         return httpSecurity
             .cors(Customizer.withDefaults())
             .csrf(
@@ -39,15 +42,19 @@ public class SecurityConfig {
                     .disable())
             .authorizeHttpRequests(
                 http -> http
+                    .requestMatchers("/api/user/info").authenticated()
+                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/api/user", "/api/user/**").hasRole("ADMIN")
+                    .requestMatchers("/api/group", "/api/group/**").hasRole("ADMIN")
                     .requestMatchers("/api/login").permitAll()
-                    .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/manifest.json").permitAll()
+                    .requestMatchers("/*", "/assets/**").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(
                 formLogin -> formLogin
                     .disable()
             )
-            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(
                 httpBasic -> httpBasic
                     .disable()

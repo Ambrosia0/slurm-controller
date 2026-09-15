@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +53,6 @@ public class LoginController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
         HttpServletResponse response,
@@ -70,7 +68,6 @@ public class LoginController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/info")
     public ResponseEntity<?> getRole(
         @AuthenticationPrincipal CustomUserDetails userDetails) {
