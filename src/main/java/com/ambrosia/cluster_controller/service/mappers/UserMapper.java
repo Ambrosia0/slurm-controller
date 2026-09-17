@@ -50,7 +50,6 @@ public class UserMapper {
             var dto = new UserAdminResponse(
                 user.getId(),
                 user.getUsername(),
-                passwordEncryptor.decode(user.getPassword()), 
                 user.getGroup()==null? null: groupMapper.toResponse(user.getGroup()),
                 user.getCreatedAt());
                 return dto;

@@ -5,7 +5,7 @@ import { PageResponse, Sort } from "./Interfaces";
 export type UserAdminResponse = {
     id: number;
     username: string;
-    password: string;
+    password?: string;
     group: GroupAdminResponse | null;
     createdAt: number;
 }
@@ -37,6 +37,10 @@ export const getUsers = async (page: number, size: number, sort: Sort | null, fi
         }
     });
     return resp.data;
+}
+
+export const getPassword = async (userId: number) =>{
+    return (await apiClient.get<string>(`/api/user/${userId}/pw`)).data;
 }
 
 export const updateUser = async (userId: number, request: UserAdminRequest) => {

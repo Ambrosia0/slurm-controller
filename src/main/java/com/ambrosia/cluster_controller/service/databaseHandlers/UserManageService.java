@@ -49,6 +49,13 @@ public interface UserManageService {
     void importUsers(MultipartFile file);
 
     /**
+     * Returns password of the user
+     * @param userId
+     * @return string, containing password
+     */
+    String getPassword(Long userId);
+
+    /**
      * Search users
      * @param username
      * @param pageable

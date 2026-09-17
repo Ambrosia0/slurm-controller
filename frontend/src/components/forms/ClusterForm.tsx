@@ -144,7 +144,7 @@ const ClusterForm: React.FC<FormProps> = ({
             </label>
                 <div className="form-action">
                     <button type="button" onClick={() => addCluster()}>{t('clusterForm.add')}</button>
-                    <button type="button" onClick={onClose}>{t('clusterForm.back')}</button>
+                    <button type="button" onClick={onClose}>{t('common.back')}</button>
                 </div>
             </form>
         </ModalForm>

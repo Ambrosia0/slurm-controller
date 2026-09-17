@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ambrosia.cluster_controller.config.security.CustomUserDetails;
 import com.ambrosia.cluster_controller.model.DTO.admin.request.UserAdminRequest;
 import com.ambrosia.cluster_controller.model.DTO.admin.response.UserAdminResponse;
 import com.ambrosia.cluster_controller.model.DTO.filters.UserFilter;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,10 +50,13 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void delete(
-            @PathVariable Long userId,
-            @AuthenticationPrincipal CustomUserDetails userDetails){
+    public void delete(@PathVariable Long userId){
         userService.deleteById(userId);
+    }
+
+    @GetMapping("/{userId}/pw")
+    public String getPassword(@PathVariable Long userId){
+        return userService.getPassword(userId);
     }
 
     @GetMapping
