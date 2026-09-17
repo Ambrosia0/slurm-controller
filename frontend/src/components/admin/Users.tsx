@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import MovingPanel from "../../utils/MovingPanel";
 import CreateUserForm from "../forms/CreaterUserForm";
 import { exportGroupToJSON, getGroups } from "../../api/admin/groups";
-import { exportUsersToJson, importUsersFromJson, deleteUser as apiDeleteUser, getUsers, UserAdminResponse, UserPageResponse } from "../../api/admin/users";
+import { exportUsersToJson, importUsersFromJson, deleteUser as apiDeleteUser, getUsers, UserAdminResponse, UserPageResponse, getPassword } from "../../api/admin/users";
 import GroupRenameForm from "../forms/GroupRenameForm";
 import DeleteGroupForm from "../forms/DeleteGroupForm";
 import CreateGroupForm from "../forms/CreateGroupForm";
@@ -344,8 +344,28 @@ const Users = () => {
         }))
     }
 
-    const HiddenPassword = ({ password }: {password: string}) =>{
+    const HiddenPassword = ({ userId }: {userId: number}) =>{
         const [visible, setVisible] = useState<boolean>(false);
+        const [password, setPassword] = useState<string | null>(null);
+
+
+        useEffect(() => {
+            const getPasswordForUser = async () => {
+                try {
+                    setPassword(await getPassword(userId));
+                } catch (error) {
+                    alert('Error!');
+                    console.log("Error!", error);
+                }
+            }
+            if(!visible){
+                setPassword(null);
+            }else{
+                getPasswordForUser();
+            }
+
+        }, [visible])
+
         return(
             <span>
                 {visible? password: "********"}
@@ -353,7 +373,7 @@ const Users = () => {
                     style={{
                         background: "none"
                     }}
-                    onClick={() => setVisible(val => !val)}
+                    onClick={() => setVisible(!visible)}
                     aria-label={visible ? "Hide password" : "Show password"}
                 >
                     {visible? "👁️": "👁️‍🗨️"}
@@ -443,7 +463,7 @@ const Users = () => {
                                                 <td>{index+1}</td>
                                                 <td>{user.id}</td>
                                                 <td>{user.username}</td>
-                                                <td><HiddenPassword password={user.password}/></td>
+                                                <td><HiddenPassword userId={user.id}/></td>
                                                 <td>{new Date(user.createdAt).toLocaleString()}</td>
                                                 <td>
                                                     <button onClick={() => deleteUser(user)}>{t("users.delete")}</button>
@@ -484,7 +504,7 @@ const Users = () => {
                                                     <td>{index+1}</td>
                                                     <td>{user.id}</td>
                                                     <td>{user.username}</td>
-                                                    <td><HiddenPassword password={user.password}/></td>
+                                                    <td><HiddenPassword userId={user.id}/></td>
                                                     <td>{user.group !== null ? user.group.name : t('common.no')}</td>
                                                     <td>{new Date(user.createdAt).toLocaleString()}</td>
                                                     <td>

@@ -184,4 +184,13 @@ public class UserManageServiceImpl implements UserManageService {
         return userRepository.findAll(spec, pageable)
             .map(userMapper::toAdminResponse);
     }
+
+    @Override
+    public String getPassword(Long userId) {
+        return passwordEncryptor.decode(
+            userRepository.findById(userId)
+            .orElseThrow(() -> new UserDoesntExistException())
+            .getPassword()
+        );
+    }
 }
